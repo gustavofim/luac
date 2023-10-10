@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+[ ! -d bin ] && make >> /dev/null
+
+for file in `ls ../lua-5.4.6-tests/*.lua`; do
+    base=$(basename $file)
+    make test FILE=$base
+done
