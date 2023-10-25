@@ -9,12 +9,18 @@ Inconsistencies with the reference were removed from the grammar, those were:
 - Some aditional escapes for WoW Lua;
 - Implementation of `continue`;
 
-# Semantic analisys
+# Semantic analysis
 
-## Runtime
+- Typing and coersion:
+    - Runtime, thats the point
 
-- Types?
+- Variable declaration:
+    - Undeclared variables evaluate to Nil -> Runtime
+        - Trying to call or access index of Nil -> Compile (single table for identifiers?)
 
-## Compile-time
+- Function declaration and parameters:
+    - Extra parameters are ignored
+    - Non specified parameters evaluate to Nil -> Runtime
 
-- Undeclared functions?
+- Tables
+    - Fields evaluate to Nil when not initialized
