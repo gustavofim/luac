@@ -24,3 +24,7 @@ Inconsistencies with the reference were removed from the grammar, those were:
 
 - Tables
     - Fields evaluate to Nil when not initialized
+
+## Notes
+- Assignment: varlist -> var -> <identifier>
+- Evaluation: varOrExp -> var -> <identifier>

@@ -1,10 +1,5 @@
-function test(a, b)
-    print('Testando:')
-    print(a)
-    print(b)
-    print()
-end
+a = {}
 
-test(1)
-test(1, 2)
-test(1, 2, 3, 4)
+a.b = 10
+
+print(a.b)
