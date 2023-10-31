@@ -1,4 +1,4 @@
-package tables;
+package table;
 
 import java.util.HashMap;
 import java.util.Formatter;
