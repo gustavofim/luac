@@ -3,7 +3,7 @@ package ast;
 import java.util.ArrayList;
 import java.util.List;
 
-import table.IdentifierTable;
+// import table.IdentifierTable;
 
 // Implementação dos nós da AST.
 public class AST {
@@ -50,7 +50,7 @@ public class AST {
 	// Variáveis internas usadas para geração da saída em DOT.
 	// Estáticas porque só precisamos de uma instância.
 	private static int nr;
-	private static IdentifierTable idt;
+	// private static IdentifierTable idt;
 
 	// Imprime recursivamente a codificação em DOT da subárvore começando no nó atual.
 	// Usa stderr como saída para facilitar o redirecionamento, mas isso é só um hack.
@@ -76,9 +76,9 @@ public class AST {
 	}
 
 	// Imprime a árvore toda em stderr.
-	public static void printDot(AST tree, IdentifierTable table) {
+	public static void printDot(AST tree) {//, IdentifierTable table) {
 	    nr = 0;
-	    idt = table;
+	    // idt = table;
 	    System.err.printf("digraph {\ngraph [ordering=\"out\"];\n");
 	    tree.printNodeDot();
 	    System.err.printf("}\n");

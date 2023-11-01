@@ -31,20 +31,20 @@ public final class IdentifierTable {
     private static final class Entry {
         private String name;
         private int line;
-        private HashMap<String, Entry> children;
+        // private HashMap<String, Entry> children;
 
         Entry(String name, int line) {
             this.name = name;
             this.line = line;
         }
 
-        public String getName() {
-            return this.name;
-        }
+        // public String getName() {
+        //     return this.name;
+        // }
 
-        public int getLine() {
-            return this.line;
-        }
+        // public int getLine() {
+        //     return this.line;
+        // }
 
         public String toString() {
             StringBuilder sb = new StringBuilder();

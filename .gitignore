@@ -1,4 +1,6 @@
 src/bin/
 src/parser/
 src/.antlr/
-
+.vscode/
+*.pdf
+*.dot

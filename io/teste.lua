@@ -1,5 +1,5 @@
 a = {}
 
-a.b = 10
+c = 0xff
 
-print(a.b)
+a.b = c

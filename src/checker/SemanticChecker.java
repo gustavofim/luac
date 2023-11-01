@@ -2,40 +2,17 @@ package checker;
 
 import static ast.NodeKind.ASSIGN_NODE;
 import static ast.NodeKind.BLOCK_NODE;
-import static ast.NodeKind.EQ_NODE;
-import static ast.NodeKind.IF_NODE;
-import static ast.NodeKind.LT_NODE;
-import static ast.NodeKind.MINUS_NODE;
-import static ast.NodeKind.OVER_NODE;
-import static ast.NodeKind.PLUS_NODE;
-import static ast.NodeKind.PROGRAM_NODE;
-import static ast.NodeKind.READ_NODE;
-import static ast.NodeKind.REPEAT_NODE;
-import static ast.NodeKind.STAT_NODE;
 import static ast.NodeKind.VAL_NODE;
-import static ast.NodeKind.TIMES_NODE;
-import static ast.NodeKind.VAR_DECL_NODE;
 import static ast.NodeKind.VAR_LIST_NODE;
 import static ast.NodeKind.VAR_USE_NODE;
-import static ast.NodeKind.WRITE_NODE;
-
-import javax.naming.Context;
-
-import org.antlr.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 import ast.AST;
-import parser.LuaParser;
 import parser.LuaParserBaseVisitor;
 import parser.LuaParser.AssignContext;
 import parser.LuaParser.BlockContext;
 import parser.LuaParser.ChunkContext;
-import parser.LuaParser.ExpContext;
 import parser.LuaParser.ExplistContext;
 import parser.LuaParser.NumberContext;
-import parser.LuaParser.PrefixContext;
-import parser.LuaParser.StatContext;
 import parser.LuaParser.VarContext;
 import parser.LuaParser.VarOrExpContext;
 import parser.LuaParser.VarlistContext;
@@ -110,7 +87,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     // Exibe a AST no formato DOT em stderr.
     public void printAST() {
-    	AST.printDot(root, idt);
+    	AST.printDot(root);
     }
 
     // ----------------------------------------------------------------------------
