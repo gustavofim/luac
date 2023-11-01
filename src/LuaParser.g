@@ -68,22 +68,22 @@ explist
     ;
 
 exp
-    : NIL | FALSE | TRUE
-    | number
-    | string
-    | '...'
-    | functiondef
-    | prefixexp
-    | tableconstructor
-    | <assoc=right> exp operatorPower exp
-    | operatorUnary exp
-    | exp operatorMulDivMod exp
-    | exp operatorAddSub exp
-    | <assoc=right> exp operatorStrcat exp
-    | exp operatorComparison exp
-    | exp operatorAnd exp
-    | exp operatorOr exp
-    | exp operatorBitwise exp
+    : NIL #nil | FALSE #false | TRUE #true
+    | number #numConst
+    | string #strConst
+    | '...' #ellipsis
+    | functiondef #functionDefExp
+    | prefixexp #prefix
+    | tableconstructor #table
+    | <assoc=right> exp operatorPower exp #power
+    | operatorUnary exp #unary
+    | exp operatorMulDivMod exp #multDivMod
+    | exp operatorAddSub exp #addSub
+    | <assoc=right> exp operatorStrcat exp #strCat
+    | exp operatorComparison exp #comparison
+    | exp operatorAnd exp #and
+    | exp operatorOr exp #or
+    | exp operatorBitwise exp #bitwise
     ;
 
 prefixexp

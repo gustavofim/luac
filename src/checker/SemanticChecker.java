@@ -19,6 +19,9 @@ import static ast.NodeKind.VAR_LIST_NODE;
 import static ast.NodeKind.VAR_USE_NODE;
 import static ast.NodeKind.WRITE_NODE;
 
+import javax.naming.Context;
+
+import org.antlr.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -28,9 +31,13 @@ import parser.LuaParserBaseVisitor;
 import parser.LuaParser.AssignContext;
 import parser.LuaParser.BlockContext;
 import parser.LuaParser.ChunkContext;
+import parser.LuaParser.ExpContext;
 import parser.LuaParser.ExplistContext;
+import parser.LuaParser.NumberContext;
+import parser.LuaParser.PrefixContext;
 import parser.LuaParser.StatContext;
 import parser.LuaParser.VarContext;
+import parser.LuaParser.VarOrExpContext;
 import parser.LuaParser.VarlistContext;
 import table.IdentifierTable;
 
@@ -135,16 +142,27 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
 	@Override
 	public AST visitExplist(ExplistContext ctx) {
-		// AST node = AST.newSubtree(STAT_NODE);
-		// ctx.children.forEach((child) -> {
-		// 	node.addChild(visit(child));
-		// });
-		return new AST(VAL_NODE, "nothing");
+		AST node = AST.newSubtree(VAR_LIST_NODE);
+		ctx.exp().forEach((child) -> {
+            AST temp = visit(child);
+			if (temp != null) node.addChild(temp);
+            // node.addChild(visit(child));
+		});
+        return node;
 	}
 
     @Override
+    public AST visitVarOrExp(VarOrExpContext ctx) {
+        return visit(ctx.var());
+    }
+
+    @Override
+    public AST visitNumber(NumberContext ctx) {
+        return new AST(VAL_NODE, ctx.getChild(0).toString());
+    }
+
+    @Override
     public AST visitVarlist(VarlistContext ctx) {
-        System.out.println(ctx.toString());
 		AST node = AST.newSubtree(VAR_LIST_NODE);
 		ctx.var().forEach((child) -> {
 			node.addChild(visit(child));
@@ -154,7 +172,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitVar(VarContext ctx) {
-        return new AST(VAL_NODE, ctx.NAME().getSymbol().getText());
+        return new AST(VAR_USE_NODE, ctx.NAME().getSymbol().getText());
     }
 
     // ----------------------------------------------------------------------------

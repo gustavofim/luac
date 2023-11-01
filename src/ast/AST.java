@@ -59,7 +59,7 @@ public class AST {
 
 	    System.err.printf("node%d[label=\"", myNr);
 	    if (this.kind == NodeKind.VAR_DECL_NODE || this.kind == NodeKind.VAR_USE_NODE) {
-	    	System.err.printf("%s@", "temp");//vt.getName(this.data));
+	    	System.err.printf("%s@", "VAR");//vt.getName(this.data));
 	    } else {
 	    	System.err.printf("%s", this.kind.toString());
 	    }
