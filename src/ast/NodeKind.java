@@ -18,8 +18,9 @@ public enum NodeKind {
     PROGRAM_NODE,
     READ_NODE,
     REPEAT_NODE,
-    VAL_NODE,
+    STAT_NODE,
     TIMES_NODE,
+    VAL_NODE,
     VAR_DECL_NODE,
     VAR_LIST_NODE,
     VAR_USE_NODE,
@@ -38,12 +39,13 @@ public enum NodeKind {
             case PROGRAM_NODE:  return "program";
             case READ_NODE:     return "read";
             case REPEAT_NODE:   return "repeat";
+            case STAT_NODE:     return "stat";
             case TIMES_NODE:    return "*";
+            case VAL_NODE:      return "";
             case VAR_DECL_NODE: return "var_decl";
             case VAR_LIST_NODE: return "var_list";
             case VAR_USE_NODE:  return "var_use";
             case WRITE_NODE:    return "write";
-            case VAL_NODE:      return "";
 			default:
 				System.err.println("ERROR: Fall through in NodeKind enumeration!");
 				System.exit(1);

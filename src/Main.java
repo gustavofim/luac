@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import checker.SemanticChecker;
 import parser.LuaLexer;
 import parser.LuaParser;
 //import checker.SemanticChecker;
@@ -36,6 +37,11 @@ public class Main {
 			return;
 		}
 
+		// Cria o analisador semântico e visita a ParseTree para
+		// fazer a análise.
+		SemanticChecker checker = new SemanticChecker();
+		checker.visit(tree);
+
 		System.out.println("PARSE SUCCESSFUL!");
 
 		IdentifierTable idTab = new IdentifierTable();
@@ -43,5 +49,7 @@ public class Main {
 		idTab.add("somevar.thing", 2);
 		idTab.add("thing", 4);
 		System.out.println(idTab);
+
+		checker.printAST();
 	}
 }

@@ -11,6 +11,7 @@ import static ast.NodeKind.PLUS_NODE;
 import static ast.NodeKind.PROGRAM_NODE;
 import static ast.NodeKind.READ_NODE;
 import static ast.NodeKind.REPEAT_NODE;
+import static ast.NodeKind.STAT_NODE;
 import static ast.NodeKind.VAL_NODE;
 import static ast.NodeKind.TIMES_NODE;
 import static ast.NodeKind.VAR_DECL_NODE;
@@ -24,9 +25,13 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import ast.AST;
 import parser.LuaParser;
 import parser.LuaParserBaseVisitor;
+import parser.LuaParser.AssignContext;
 import parser.LuaParser.BlockContext;
 import parser.LuaParser.ChunkContext;
+import parser.LuaParser.ExplistContext;
 import parser.LuaParser.StatContext;
+import parser.LuaParser.VarContext;
+import parser.LuaParser.VarlistContext;
 import table.IdentifierTable;
 
 /*
@@ -114,18 +119,43 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 	@Override
 	public AST visitBlock(BlockContext ctx) {
 		AST node = AST.newSubtree(BLOCK_NODE);
-		ctx.stat().forEach((stat) -> {
-			AST child = visit(stat);
-			node.addChild(child);
+		ctx.stat().forEach((child) -> {
+			node.addChild(visit(child));
 		});
 		return node;
-
 	}
 
 	@Override
-	public AST visitStat(StatContext ctx) {
-		return new AST(VAL_NODE, "HEEy");
+	public AST visitAssign(AssignContext ctx) {
+		AST node = AST.newSubtree(ASSIGN_NODE);
+        node.addChild(visit(ctx.varlist()));
+        node.addChild(visit(ctx.explist()));
+		return node;
 	}
+
+	@Override
+	public AST visitExplist(ExplistContext ctx) {
+		// AST node = AST.newSubtree(STAT_NODE);
+		// ctx.children.forEach((child) -> {
+		// 	node.addChild(visit(child));
+		// });
+		return new AST(VAL_NODE, "nothing");
+	}
+
+    @Override
+    public AST visitVarlist(VarlistContext ctx) {
+        System.out.println(ctx.toString());
+		AST node = AST.newSubtree(VAR_LIST_NODE);
+		ctx.var().forEach((child) -> {
+			node.addChild(visit(child));
+		});
+		return node;
+    }
+
+    @Override
+    public AST visitVar(VarContext ctx) {
+        return new AST(VAL_NODE, ctx.NAME().getSymbol().getText());
+    }
 
     // ----------------------------------------------------------------------------
 

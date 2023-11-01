@@ -35,7 +35,8 @@ javac:
 # Executa o front-end. Comando: $ make run FILE=arquivo_de_teste
 # 'Main' é a classe com a função principal
 run:
-	$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/io/$(FILE)
+	$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/io/$(FILE) 2> tree.dot
+	dot -Tpdf tree.dot -o tree.pdf
 test:
 	@echo "Running $(FILE):"
 	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/lua-5.4.6-tests/$(FILE)

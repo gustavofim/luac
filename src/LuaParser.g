@@ -18,21 +18,21 @@ block
     ;
 
 stat
-    : SEMI
-    | varlist ASSIGN explist
-    | functioncall
-    | label
-    | BREAK
-    | GOTO NAME
-    | DO block END
-    | WHILE exp DO block END
-    | REPEAT block UNTIL exp
-    | IF exp THEN block (ELSEIF exp THEN block)* (ELSE block)? END
-    | FOR NAME ASSIGN exp COMMA exp (COMMA exp)? DO block END
-    | FOR namelist IN explist DO block END
-    | FUNCTION funcname funcbody
-    | LOCAL FUNCTION NAME funcbody
-    | LOCAL attnamelist (ASSIGN explist)?
+    : SEMI #semi
+    | varlist ASSIGN explist #assign
+    | functioncall #functionCall
+    | label #temp
+    | BREAK #break
+    | GOTO NAME #goto
+    | DO block END #do
+    | WHILE exp DO block END #while
+    | REPEAT block UNTIL exp #repeat
+    | IF exp THEN block (ELSEIF exp THEN block)* (ELSE block)? END #ifThenElse
+    | FOR NAME ASSIGN exp COMMA exp (COMMA exp)? DO block END #forName
+    | FOR namelist IN explist DO block END #for
+    | FUNCTION funcname funcbody #functionDef
+    | LOCAL FUNCTION NAME funcbody #localFunctionDef
+    | LOCAL attnamelist (ASSIGN explist)? #local
     ;
 
 attnamelist
