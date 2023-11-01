@@ -1,18 +1,32 @@
 package checker;
 
+import static ast.NodeKind.ARGS_NODE;
 import static ast.NodeKind.ASSIGN_NODE;
 import static ast.NodeKind.BLOCK_NODE;
+import static ast.NodeKind.EXP_LIST_NODE;
+import static ast.NodeKind.MINUS_NODE;
+import static ast.NodeKind.OVER_NODE;
+import static ast.NodeKind.PLUS_NODE;
+import static ast.NodeKind.TIMES_NODE;
 import static ast.NodeKind.VAL_NODE;
 import static ast.NodeKind.VAR_LIST_NODE;
 import static ast.NodeKind.VAR_USE_NODE;
 
 import ast.AST;
+import ast.NodeKind;
 import parser.LuaParserBaseVisitor;
+import parser.LuaParser.AddSubContext;
+import parser.LuaParser.ArgListContext;
 import parser.LuaParser.AssignContext;
 import parser.LuaParser.BlockContext;
 import parser.LuaParser.ChunkContext;
 import parser.LuaParser.ExplistContext;
+import parser.LuaParser.FunctionCallContext;
+import parser.LuaParser.FunctioncallContext;
+import parser.LuaParser.MultDivModContext;
+import parser.LuaParser.NameAndArgsContext;
 import parser.LuaParser.NumberContext;
+import parser.LuaParser.StringContext;
 import parser.LuaParser.VarContext;
 import parser.LuaParser.VarOrExpContext;
 import parser.LuaParser.VarlistContext;
@@ -104,7 +118,9 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 	public AST visitBlock(BlockContext ctx) {
 		AST node = AST.newSubtree(BLOCK_NODE);
 		ctx.stat().forEach((child) -> {
-			node.addChild(visit(child));
+            AST temp = visit(child);
+			if (temp != null) node.addChild(temp);
+            // node.addChild(visit(child));
 		});
 		return node;
 	}
@@ -119,7 +135,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
 	@Override
 	public AST visitExplist(ExplistContext ctx) {
-		AST node = AST.newSubtree(VAR_LIST_NODE);
+		AST node = AST.newSubtree(EXP_LIST_NODE);
 		ctx.exp().forEach((child) -> {
             AST temp = visit(child);
 			if (temp != null) node.addChild(temp);
@@ -139,6 +155,13 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     }
 
     @Override
+    public AST visitString(StringContext ctx) {
+        String str = ctx.getChild(0).toString();
+        str = str.substring(1, str.length()-1);
+        return new AST(VAL_NODE, str);
+    }
+
+    @Override
     public AST visitVarlist(VarlistContext ctx) {
 		AST node = AST.newSubtree(VAR_LIST_NODE);
 		ctx.var().forEach((child) -> {
@@ -150,6 +173,57 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     @Override
     public AST visitVar(VarContext ctx) {
         return new AST(VAR_USE_NODE, ctx.NAME().getSymbol().getText());
+    }
+
+    @Override
+    public AST visitAddSub(AddSubContext ctx) {
+        NodeKind kind;
+        String op = ctx.operatorAddSub().getText();
+        if (op == "+") {
+            kind = PLUS_NODE;
+        } else {
+            kind = MINUS_NODE;
+        }
+		AST node = AST.newSubtree(kind);
+		ctx.exp().forEach((child) -> {
+			node.addChild(visit(child));
+		});
+        return node;
+    }
+
+    @Override
+    public AST visitMultDivMod(MultDivModContext ctx) {
+        NodeKind kind;
+        String op = ctx.operatorMulDivMod().getText();
+        if (op == "*") {
+            kind = TIMES_NODE;
+        } else  {
+            kind = OVER_NODE;
+        }
+        AST node = AST.newSubtree(kind);
+		ctx.exp().forEach((child) -> {
+			node.addChild(visit(child));
+		});
+        return node;
+    }
+
+    @Override
+    public AST visitFunctioncall(FunctioncallContext ctx) {
+        AST name = visit(ctx.varOrExp());
+        if (ctx.nameAndArgs().size() == 0) return name;
+        AST args = new AST(ARGS_NODE, "");
+		ctx.nameAndArgs().forEach((child) -> {
+            AST temp = visit(child);
+			if (temp != null) args.addChild(temp);
+            // node.addChild(visit(child));
+		});
+        name.addChild(args);
+        return name;
+    }
+
+    @Override
+    public AST visitArgList(ArgListContext ctx) {
+        return visit(ctx.explist());
     }
 
     // ----------------------------------------------------------------------------

@@ -111,7 +111,7 @@ nameAndArgs
     ;
 
 args
-    : LPAR explist? RPAR | tableconstructor | string
+    : LPAR explist? RPAR #argList | tableconstructor #tableArg | string #stringConstArg
     ;
 
 functiondef

@@ -7,9 +7,11 @@ package ast;
 // fã, acho que só complica mais as coisas. Imagine uma classe abstrata AST
 // com mais de 20 classes herdando dela, uma classe para cada tipo de nó...
 public enum NodeKind {
+    ARGS_NODE,
     ASSIGN_NODE,
-    EQ_NODE,
     BLOCK_NODE,
+    EQ_NODE,
+    EXP_LIST_NODE,
     IF_NODE,
     LT_NODE,
     MINUS_NODE,
@@ -28,9 +30,11 @@ public enum NodeKind {
 
 	public String toString() {
 		switch(this) {
-            case ASSIGN_NODE:   return ":=";
-            case EQ_NODE:       return "=";
+            case ARGS_NODE:   return "args";
+            case ASSIGN_NODE:   return "=";
             case BLOCK_NODE:    return "block";
+            case EQ_NODE:       return "==";
+            case EXP_LIST_NODE: return "exp_list";
             case IF_NODE:       return "if";
             case LT_NODE:       return "<";
             case MINUS_NODE:    return "-";
