@@ -13,6 +13,8 @@ import static ast.NodeKind.VAL_NODE;
 import static ast.NodeKind.VAR_LIST_NODE;
 import static ast.NodeKind.VAR_USE_NODE;
 
+import org.antlr.v4.parse.ANTLRParser.localsSpec_return;
+
 import ast.AST;
 import ast.NodeKind;
 import parser.LuaParserBaseVisitor;
@@ -59,6 +61,11 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 	private IdentifierTable idt = new IdentifierTable();
 
     AST root; // Nó raiz da AST sendo construída.
+
+    public SemanticChecker() {
+        idt.add("print", 0);
+        idt.add("read", 0);
+    }
 
     // Testa se o dado token foi declarado antes.
     // Se sim, cria e retorna um nó de 'var use'.
@@ -135,6 +142,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 	@Override
 	public AST visitExplist(ExplistContext ctx) {
 		AST node = AST.newSubtree(EXP_LIST_NODE);
+        System.out.println(ctx.exp().size());
 		ctx.exp().forEach((child) -> {
             AST temp = visit(child);
 			if (temp != null) node.addChild(temp);
@@ -164,7 +172,11 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     public AST visitVarlist(VarlistContext ctx) {
 		AST node = AST.newSubtree(VAR_LIST_NODE);
 		ctx.var().forEach((child) -> {
-			node.addChild(visit(child));
+            AST childNode = visit(child);
+            if (!idt.lookup(childNode.data)) {
+                idt.add(childNode.data, 0);
+            }
+			node.addChild(childNode);
 		});
 		return node;
     }
@@ -209,12 +221,17 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     @Override
     public AST visitFunctioncall(FunctioncallContext ctx) {
         AST name = visit(ctx.varOrExp());
-        if (ctx.nameAndArgs().size() == 0) return name;
+        if (!idt.lookup(name.data)) {
+        	System.out.println("RUNTIME ERROR: attempt to call a nil value.\n");
+            System.exit(1);
+        }
+        if (ctx.nameAndArgs().size() == 0) {
+            return name;
+        }
         AST args = new AST(ARGS_NODE, "");
 		ctx.nameAndArgs().forEach((child) -> {
             AST temp = visit(child);
 			if (temp != null) args.addChild(temp);
-            // node.addChild(visit(child));
 		});
         name.addChild(args);
         return name;
@@ -222,6 +239,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitArgList(ArgListContext ctx) {
+        if (ctx.explist() == null) return null;
         return visit(ctx.explist());
     }
 
