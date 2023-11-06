@@ -1,3 +1,5 @@
 package LuaRuntime;
 
-public interface LuaType { }
+public interface LuaType {
+    Double getNumData(); 
+}
