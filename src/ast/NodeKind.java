@@ -15,6 +15,7 @@ public enum NodeKind {
     IF_NODE,
     LT_NODE,
     MINUS_NODE,
+    NUM_NODE,
     OVER_NODE,
     PLUS_NODE,
     PROGRAM_NODE,
@@ -38,6 +39,7 @@ public enum NodeKind {
             case IF_NODE:       return "if";
             case LT_NODE:       return "<";
             case MINUS_NODE:    return "-";
+            case NUM_NODE:      return "";
             case OVER_NODE:     return "/";
             case PLUS_NODE:     return "+";
             case PROGRAM_NODE:  return "program";
@@ -60,6 +62,7 @@ public enum NodeKind {
 	public static boolean hasData(NodeKind kind) {
 		switch(kind) {
 	        case VAL_NODE:
+	        case NUM_NODE:
 	        case VAR_DECL_NODE:
 	        case VAR_USE_NODE:
 	            return true;

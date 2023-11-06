@@ -1,5 +1,8 @@
 package ast;
 
+import static ast.NodeKind.NUM_NODE;
+import static ast.NodeKind.VAL_NODE;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,7 @@ public class AST {
 	// Os campos 'data' NÃO ficam sincronizados!
 	public  final NodeKind kind;
 	public  final String data;
+	public  final Double numData;
 	private final List<AST> children; // Privado para que a manipulação da lista seja controlável.
 
 	// Construtor completo para poder tornar todos os campos finais.
@@ -21,6 +25,14 @@ public class AST {
 	public AST(NodeKind kind, String data) {
 		this.kind = kind;
 		this.data = data;
+		this.numData = 0.0;
+		this.children = new ArrayList<AST>();
+	}
+
+	public AST(NodeKind kind, Double data) {
+		this.kind = kind;
+		this.data = "";
+		this.numData = data;
 		this.children = new ArrayList<AST>();
 	}
 
@@ -64,8 +76,12 @@ public class AST {
 	    	System.err.printf("%s", this.kind.toString());
 	    }
 	    if (NodeKind.hasData(this.kind)) {
-			System.err.printf("%s", this.data);
-	    }
+			if (this.kind == NUM_NODE) {
+				System.err.printf("num: %f", this.numData);
+			} else {
+				System.err.printf("notNum: %s", this.data);
+			}
+		}
 	    System.err.printf("\"];\n");
 
 	    for (int i = 0; i < this.children.size(); i++) {

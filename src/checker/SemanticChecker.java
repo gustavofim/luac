@@ -5,6 +5,7 @@ import static ast.NodeKind.ASSIGN_NODE;
 import static ast.NodeKind.BLOCK_NODE;
 import static ast.NodeKind.EXP_LIST_NODE;
 import static ast.NodeKind.MINUS_NODE;
+import static ast.NodeKind.NUM_NODE;
 import static ast.NodeKind.OVER_NODE;
 import static ast.NodeKind.PLUS_NODE;
 import static ast.NodeKind.TIMES_NODE;
@@ -149,7 +150,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitNumber(NumberContext ctx) {
-        return new AST(VAL_NODE, ctx.getChild(0).toString());
+        return new AST(NUM_NODE, Double.parseDouble(ctx.getChild(0).toString()));
     }
 
     @Override
