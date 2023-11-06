@@ -4,3 +4,4 @@ src/.antlr/
 .vscode/
 *.pdf
 *.dot
+*.jar
