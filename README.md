@@ -25,6 +25,9 @@ Inconsistencies with the reference were removed from the grammar, those were:
 - Tables
     - Fields evaluate to Nil when not initialized
 
+# Coersions
+Strings may be coerced to number for arithmetic operations (not for boolean).
+
 ## Notes
-- Assignment: varlist -> var -> <identifier>
-- Evaluation: varOrExp -> var -> <identifier>
+- Assignment: varlist -> var -> identifier
+- Evaluation: varOrExp -> var -> identifier
