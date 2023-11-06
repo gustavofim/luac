@@ -8,7 +8,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import checker.SemanticChecker;
 import parser.LuaLexer;
 import parser.LuaParser;
-//import checker.SemanticChecker;
 import table.IdentifierTable;
 
 public class Main {
