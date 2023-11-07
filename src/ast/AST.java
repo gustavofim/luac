@@ -20,20 +20,19 @@ public class AST {
 	public  final Double numData;
 	private final List<AST> children; // Privado para que a manipulação da lista seja controlável.
 
-	// Construtor completo para poder tornar todos os campos finais.
-	// Privado porque não queremos os dois campos 'data' preenchidos ao mesmo tempo.
-	public AST(NodeKind kind, String data) {
+	public AST(NodeKind kind, String data, Double numData) {
 		this.kind = kind;
 		this.data = data;
-		this.numData = 0.0;
+		this.numData = numData;
 		this.children = new ArrayList<AST>();
 	}
 
+	public AST(NodeKind kind, String data) {
+		this(kind, data, 0.0);
+	}
+
 	public AST(NodeKind kind, Double data) {
-		this.kind = kind;
-		this.data = "";
-		this.numData = data;
-		this.children = new ArrayList<AST>();
+		this(kind, "", data);
 	}
 
 	// Adiciona um novo filho ao nó.

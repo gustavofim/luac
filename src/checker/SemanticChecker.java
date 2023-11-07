@@ -142,7 +142,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 	@Override
 	public AST visitExplist(ExplistContext ctx) {
 		AST node = AST.newSubtree(EXP_LIST_NODE);
-        System.out.println(ctx.exp().size());
 		ctx.exp().forEach((child) -> {
             AST temp = visit(child);
 			if (temp != null) node.addChild(temp);
@@ -174,7 +173,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 		ctx.var().forEach((child) -> {
             AST childNode = visit(child);
             if (!idt.lookup(childNode.data)) {
-                idt.add(childNode.data, 0);
+                idt.add(childNode.data, (int)Math.round(childNode.numData));
             }
 			node.addChild(childNode);
 		});
@@ -183,7 +182,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitVar(VarContext ctx) {
-        return new AST(VAR_USE_NODE, ctx.NAME().getSymbol().getText());
+        return new AST(VAR_USE_NODE, ctx.NAME().getSymbol().getText(), (double)ctx.NAME().getSymbol().getLine());
     }
 
     @Override
@@ -222,7 +221,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     public AST visitFunctioncall(FunctioncallContext ctx) {
         AST name = visit(ctx.varOrExp());
         if (!idt.lookup(name.data)) {
-        	System.out.println("RUNTIME ERROR: attempt to call a nil value.\n");
+        	System.out.printf("SEMANTIC ERROR: attempt to call a nil value at line %.0f.\n", name.numData);
             System.exit(1);
         }
         if (ctx.nameAndArgs().size() == 0) {
