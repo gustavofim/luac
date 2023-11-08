@@ -10,10 +10,9 @@ import static ast.NodeKind.OVER_NODE;
 import static ast.NodeKind.PLUS_NODE;
 import static ast.NodeKind.TIMES_NODE;
 import static ast.NodeKind.VAL_NODE;
+import static ast.NodeKind.VAR_DECL_NODE;
 import static ast.NodeKind.VAR_LIST_NODE;
 import static ast.NodeKind.VAR_USE_NODE;
-
-import org.antlr.v4.parse.ANTLRParser.localsSpec_return;
 
 import ast.AST;
 import ast.NodeKind;
@@ -151,7 +150,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
             if (!idt.lookup(childNode.data)) {
                 idt.add(childNode.data, (int)Math.round(childNode.numData));
             }
-			node.addChild(childNode);
+			node.addChild(new AST(VAR_DECL_NODE, childNode.data, childNode.numData));
 		});
 		return node;
     }
@@ -165,7 +164,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     public AST visitAddSub(AddSubContext ctx) {
         NodeKind kind;
         String op = ctx.operatorAddSub().getText();
-        if (op == "+") {
+        if (op.equals("+")) {
             kind = PLUS_NODE;
         } else {
             kind = MINUS_NODE;

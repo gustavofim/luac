@@ -49,4 +49,8 @@ public class Runtime {
                 return new LuaNil();
         }
     }
+
+    public static void print(LuaType value) {
+        System.out.println(value);
+    }
 }

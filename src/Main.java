@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import checker.SemanticChecker;
+import code.Gen;
 import parser.LuaLexer;
 import parser.LuaParser;
 
@@ -44,5 +45,7 @@ public class Main {
 		System.out.println("PARSE SUCCESSFUL!");
 
 		checker.printAST();
+		Gen gen = new Gen();
+		gen.execute(checker.getAST());
 	}
 }
