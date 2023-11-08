@@ -1,7 +1,6 @@
 package ast;
 
 import static ast.NodeKind.NUM_NODE;
-import static ast.NodeKind.VAL_NODE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +57,11 @@ public class AST {
 	    return node;
 	}
 
+	// Retorna o número de filhos do nó.
+	public int getChildCount() {
+		return this.children.size();
+	}
+
 	// Variáveis internas usadas para geração da saída em DOT.
 	// Estáticas porque só precisamos de uma instância.
 	private static int nr;
@@ -69,16 +73,18 @@ public class AST {
 		int myNr = nr++;
 
 	    System.err.printf("node%d[label=\"", myNr);
-	    if (this.kind == NodeKind.VAR_DECL_NODE || this.kind == NodeKind.VAR_USE_NODE) {
-	    	System.err.printf("%s@", "VAR");//vt.getName(this.data));
-	    } else {
+	    // if (this.kind == NodeKind.VAR_DECL_NODE || this.kind == NodeKind.VAR_USE_NODE) {
+	    // 	System.err.printf("%s@", this.data);
+	    // } else {
 	    	System.err.printf("%s", this.kind.toString());
-	    }
+	    // }
 	    if (NodeKind.hasData(this.kind)) {
 			if (this.kind == NUM_NODE) {
 				System.err.printf("num: %f", this.numData);
+			} else if (this.kind == NodeKind.VAR_DECL_NODE || this.kind == NodeKind.VAR_USE_NODE) {
+				System.err.printf(" <- %s", this.data);
 			} else {
-				System.err.printf("notNum: %s", this.data);
+				System.err.printf("<%s>", this.data);
 			}
 		}
 	    System.err.printf("\"];\n");
