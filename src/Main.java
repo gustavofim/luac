@@ -8,7 +8,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import checker.SemanticChecker;
 import parser.LuaLexer;
 import parser.LuaParser;
-import table.IdentifierTable;
 
 public class Main {
 
@@ -40,14 +39,9 @@ public class Main {
 		// fazer a análise.
 		SemanticChecker checker = new SemanticChecker();
 		checker.visit(tree);
+		checker.printTables();
 
 		System.out.println("PARSE SUCCESSFUL!");
-
-		IdentifierTable idTab = new IdentifierTable();
-		idTab.add("somevar", 1);
-		idTab.add("somevar.thing", 2);
-		idTab.add("thing", 4);
-		System.out.println(idTab);
 
 		checker.printAST();
 	}

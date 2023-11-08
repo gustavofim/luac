@@ -67,35 +67,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         idt.add("read", 0);
     }
 
-    // Testa se o dado token foi declarado antes.
-    // Se sim, cria e retorna um nó de 'var use'.
-    // AST checkVar(Token token) {
-    // 	String text = token.getText();
-    // 	int line = token.getLine();
-   	// 	int idx = vt.lookupVar(text);
-    // 	if (idx == -1) {
-    // 		System.err.printf("SEMANTIC ERROR (%d): variable '%s' was not declared.\n", line, text);
-    // 		System.exit(1);
-    //         return null; // Never reached.
-    //     }
-    // 	return new AST(VAR_USE_NODE, idx, vt.getType(idx));
-    // }
-
-    // Cria uma nova variável a partir do dado token.
-    // Retorna um nó do tipo 'var declaration'.
-    // AST newVar(Token token) {
-    // 	String text = token.getText();
-    // 	int line = token.getLine();
-   	// 	int idx = vt.lookupVar(text);
-    //     if (idx != -1) {
-    //     	System.err.printf("SEMANTIC ERROR (%d): variable '%s' already declared at line %d.\n", line, text, vt.getLine(idx));
-    //     	System.exit(1);
-    //         return null; // Never reached.
-    //     }
-    //     idx = vt.addVar(text, line, lastDeclType);
-    //     return new AST(VAR_DECL_NODE, idx, lastDeclType);
-    // }
-
     // ----------------------------------------------------------------------------
 
     // Exibe o conteúdo das tabelas em stdout.
@@ -108,6 +79,11 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     // Exibe a AST no formato DOT em stderr.
     public void printAST() {
     	AST.printDot(root);
+    }
+
+    // Retorna a AST construída ao final da análise.
+    public AST getAST() {
+    	return this.root;
     }
 
     // ----------------------------------------------------------------------------
