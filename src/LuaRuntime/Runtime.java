@@ -24,16 +24,18 @@ public class Runtime {
     }
 
     public static LuaType aritOp(LuaType a, LuaType b, int op) {
-        Double aNum = a.toDouble();
-        if (aNum == null) {
+        if (a instanceof LuaNil) {
             System.out.printf("RUNTIME ERROR: attempt to perform arithmetic on a nil value (var '%s')", a);
             System.exit(1);
         }
-        Double bNum = b.toDouble();
-        if (bNum == null) {
+
+        if (b instanceof LuaNil) {
             System.out.printf("RUNTIME ERROR: attempt to perform arithmetic on a nil value (var '%s')", b);
             System.exit(1);
         }
+
+        Double aNum = a.toDouble();
+        Double bNum = b.toDouble();
 
         switch (op) {
             case 1:
@@ -46,6 +48,31 @@ public class Runtime {
                 return new LuaNumber(aNum / bNum);
             case 5:
                 return new LuaNumber(aNum % bNum);
+            default:
+                // Should never be accessed
+                return new LuaNil();
+        }
+    }
+
+    public static LuaType relatOp(LuaType a, LuaType b, int op) {
+        if (a.getClass() != b.getClass()) {
+            return new LuaBoolean(false);
+        }
+
+        Double aNum = a.toDouble();
+        Double bNum = b.toDouble();
+
+        switch (op) {
+            case 1:
+                return new LuaBoolean(aBool > bBool);
+            case 2:
+                return new LuaBoolean(aBool < bBool);
+            case 3:
+                return new LuaBoolean(aBool >= bBool);
+            case 4:
+                return new LuaBoolean(aBool / bBool);
+            case 5:
+                return new LuaBoolean(aBool % bBool);
             default:
                 // Should never be accessed
                 return new LuaNil();
