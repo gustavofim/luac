@@ -23,15 +23,13 @@ public class Runtime {
         return vars.getOrDefault(id, new LuaNil());
     }
 
-    public static LuaType aritOp(String a, String b, int op) {
-        LuaType aLua = getVar(a);
-        LuaType bLua = getVar(b);
-        Double aNum = aLua.getNumData();
+    public static LuaType aritOp(LuaType a, LuaType b, int op) {
+        Double aNum = a.getNumData();
         if (aNum == null) {
             System.out.printf("RUNTIME ERROR: attempt to perform arithmetic on a nil value (var '%s')", a);
             System.exit(1);
         }
-        Double bNum = bLua.getNumData();
+        Double bNum = b.getNumData();
         if (bNum == null) {
             System.out.printf("RUNTIME ERROR: attempt to perform arithmetic on a nil value (var '%s')", b);
             System.exit(1);
