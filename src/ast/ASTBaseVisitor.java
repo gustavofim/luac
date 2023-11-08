@@ -34,15 +34,16 @@ public abstract class ASTBaseVisitor<T> {
 	        // case INT_VAL_NODE:  return visitIntVal(node);
 	        // case LT_NODE:       return visitLt(node);
 	        case MINUS_NODE:    return visitMinus(node);
+	        case MOD_NODE:    return visitMod(node);
 	        case NUM_NODE:      return visitNum(node);
-	        // case OVER_NODE:     return visitOver(node);
+	        case OVER_NODE:     return visitOver(node);
 	        case PLUS_NODE:     return visitPlus(node);
 	        // case PROGRAM_NODE:  return visitProgram(node);
 	        // case READ_NODE:     return visitRead(node);
 	        // case REAL_VAL_NODE: return visitRealVal(node);
 	        // case REPEAT_NODE:   return visitRepeat(node);
 	        // case STR_VAL_NODE:  return visitStrVal(node);
-	        // case TIMES_NODE:    return visitTimes(node);
+	        case TIMES_NODE:    return visitTimes(node);
 	        case VAL_NODE: return visitVal(node);
 	        case VAR_DECL_NODE: return visitVarDecl(node);
 	        // case VAR_LIST_NODE: return visitVarList(node);
@@ -76,9 +77,11 @@ public abstract class ASTBaseVisitor<T> {
 
 	protected abstract T visitMinus(AST node);
 
+	protected abstract T visitMod(AST node);
+
 	protected abstract T visitNum(AST node);
 
-	// protected abstract T visitOver(AST node);
+	protected abstract T visitOver(AST node);
 
 	protected abstract T visitPlus(AST node);
 
@@ -88,7 +91,7 @@ public abstract class ASTBaseVisitor<T> {
 
 	protected abstract T visitVal(AST node);
 
-	// protected abstract T visitTimes(AST node);
+	protected abstract T visitTimes(AST node);
 
 	protected abstract T visitVarDecl(AST node);
 

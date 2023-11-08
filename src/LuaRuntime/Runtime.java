@@ -44,6 +44,8 @@ public class Runtime {
                 return new LuaNumber(aNum * bNum);
             case 4:
                 return new LuaNumber(aNum / bNum);
+            case 5:
+                return new LuaNumber(aNum % bNum);
             default:
                 // Should never be accessed
                 return new LuaNil();

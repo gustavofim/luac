@@ -15,6 +15,7 @@ public enum NodeKind {
     // IF_NODE,
     // LT_NODE,
     MINUS_NODE,
+    MOD_NODE,
     NUM_NODE,
     OVER_NODE,
     PLUS_NODE,
@@ -39,6 +40,7 @@ public enum NodeKind {
             // case IF_NODE:       return "if";
             // case LT_NODE:       return "<";
             case MINUS_NODE:    return "-";
+            case MOD_NODE:    return "%";
             case NUM_NODE:      return "";
             case OVER_NODE:     return "/";
             case PLUS_NODE:     return "+";

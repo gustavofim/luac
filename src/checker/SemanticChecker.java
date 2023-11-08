@@ -5,6 +5,7 @@ import static ast.NodeKind.ASSIGN_NODE;
 import static ast.NodeKind.BLOCK_NODE;
 import static ast.NodeKind.EXP_LIST_NODE;
 import static ast.NodeKind.MINUS_NODE;
+import static ast.NodeKind.MOD_NODE;
 import static ast.NodeKind.NUM_NODE;
 import static ast.NodeKind.OVER_NODE;
 import static ast.NodeKind.PLUS_NODE;
@@ -127,7 +128,11 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitVarOrExp(VarOrExpContext ctx) {
-        return visit(ctx.var());
+        if (ctx.LPAR() == null) {
+            return visit(ctx.var());
+        } else {
+            return visit(ctx.exp());
+        }
     }
 
     @Override
@@ -180,10 +185,12 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     public AST visitMultDivMod(MultDivModContext ctx) {
         NodeKind kind;
         String op = ctx.operatorMulDivMod().getText();
-        if (op == "*") {
+        if (op.equals("*")) {
             kind = TIMES_NODE;
-        } else  {
+        } else  if (op.equals("/")) {
             kind = OVER_NODE;
+        } else {
+            kind = MOD_NODE;
         }
         AST node = AST.newSubtree(kind);
 		ctx.exp().forEach((child) -> {
