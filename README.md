@@ -31,6 +31,7 @@ Strings may be coerced to number for arithmetic operations (not for boolean).
 ## Notes
 - Assignment: varlist -> var -> identifier
 - Evaluation: varOrExp -> var -> identifier
+- Gen jar: `jar -cf LuaRuntime.jar LuaRuntime/*.class`
 
 ### Jasmin stuff
 - Compile: `java -jar jasmin.jar program.j`
