@@ -7,12 +7,12 @@ public class LuaNumber implements LuaType {
         this.data = data;
     }
 
-    public Double getNumData() {
+    public Double toDouble() {
         return this.data;
     }
 
     public Double add(LuaType t) {
-        Double rhs = t.getNumData();
+        Double rhs = t.toDouble();
 
         if (rhs != null) return this.data + rhs;
         return null;
@@ -21,5 +21,10 @@ public class LuaNumber implements LuaType {
     @Override
     public String toString() {
         return Double.toString(this.data);
+    }
+    
+    @Override
+    public boolean toBoolean() {
+        return true;
     }
 }

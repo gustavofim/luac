@@ -7,12 +7,17 @@ public class LuaString implements LuaType {
         this.data = data;
     }
 
-    public Double getNumData() {
+    public Double toDouble() {
         return Double.parseDouble(this.data);
     }
 
     @Override
     public String toString() {
         return this.data;
+    }
+    
+    @Override
+    public boolean toBoolean() {
+        return true;
     }
 }

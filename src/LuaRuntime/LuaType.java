@@ -1,6 +1,7 @@
 package LuaRuntime;
 
 public interface LuaType {
-    Double getNumData(); 
+    boolean toBoolean();
+    Double toDouble(); 
     String toString();
 }

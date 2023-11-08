@@ -24,12 +24,12 @@ public class Runtime {
     }
 
     public static LuaType aritOp(LuaType a, LuaType b, int op) {
-        Double aNum = a.getNumData();
+        Double aNum = a.toDouble();
         if (aNum == null) {
             System.out.printf("RUNTIME ERROR: attempt to perform arithmetic on a nil value (var '%s')", a);
             System.exit(1);
         }
-        Double bNum = b.getNumData();
+        Double bNum = b.toDouble();
         if (bNum == null) {
             System.out.printf("RUNTIME ERROR: attempt to perform arithmetic on a nil value (var '%s')", b);
             System.exit(1);

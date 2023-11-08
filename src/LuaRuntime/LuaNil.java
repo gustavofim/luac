@@ -1,12 +1,17 @@
 package LuaRuntime;
 
 public class LuaNil implements LuaType {
-    public Double getNumData() {
+    public Double toDouble() {
         return null;
     }
 
     @Override
     public String toString() {
-        return "Nil";
+        return "nil";
+    }
+    
+    @Override
+    public boolean toBoolean() {
+        return false;
     }
 }
