@@ -38,10 +38,10 @@ run:
 	@echo "Running: $(FILE).lua"
 	@mkdir -p out/
 	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/io/$(FILE).lua 2> tree.dot > out/$(FILE).j
+	@dot -Tpdf tree.dot -o tree.pdf
 	@java -jar jasmin.jar out/$(FILE).j > /dev/null
 	@java -cp "LuaRuntime.jar:." Program
 	@rm Program.class
-	@dot -Tpdf tree.dot -o tree.pdf
 test:
 	@echo "Running $(FILE):"
 	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/lua-5.4.6-tests/$(FILE)

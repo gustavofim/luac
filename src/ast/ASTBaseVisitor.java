@@ -25,30 +25,26 @@ public abstract class ASTBaseVisitor<T> {
 	protected T visit(AST node) {
 		switch(node.kind) {
 	        case ARGS_NODE:     return visitArgs(node);
+	        case ARIT_OP_NODE:   return visitAritOp(node);
 	        case ASSIGN_NODE:   return visitAssign(node);
-	        // case EQ_NODE:       return visitEq(node);
 	        case BLOCK_NODE:    return visitBlock(node);
 	        case EXP_LIST_NODE:    return visitExpList(node);
 	        // case BOOL_VAL_NODE: return visitBoolVal(node);
 	        // case IF_NODE:       return visitIf(node);
 	        // case INT_VAL_NODE:  return visitIntVal(node);
-	        // case LT_NODE:       return visitLt(node);
-	        case MINUS_NODE:    return visitMinus(node);
-	        case MOD_NODE:    return visitMod(node);
 	        case NUM_NODE:      return visitNum(node);
-	        case OVER_NODE:     return visitOver(node);
-	        case PLUS_NODE:     return visitPlus(node);
 	        // case PROGRAM_NODE:  return visitProgram(node);
 	        // case READ_NODE:     return visitRead(node);
 	        // case REAL_VAL_NODE: return visitRealVal(node);
 	        // case REPEAT_NODE:   return visitRepeat(node);
 	        // case STR_VAL_NODE:  return visitStrVal(node);
-	        case TIMES_NODE:    return visitTimes(node);
+	        case RELAT_OP_NODE:    return visitRelatOp(node);
 	        case VAL_NODE: return visitVal(node);
 	        case VAR_DECL_NODE: return visitVarDecl(node);
 	        // case VAR_LIST_NODE: return visitVarList(node);
 	        case VAR_USE_NODE:  return visitVarUse(node);
 	        // case WRITE_NODE:    return visitWrite(node);
+	        case WHILE_NODE:    return visitWhile(node);
 	
 	        default:
 	            System.err.printf("Invalid kind: %s!\n", node.kind.toString());
@@ -61,9 +57,9 @@ public abstract class ASTBaseVisitor<T> {
 
 	protected abstract T visitArgs(AST node);
 
-	protected abstract T visitAssign(AST node);
+	protected abstract T visitAritOp(AST node);
 
-	// protected abstract T visitEq(AST node);
+	protected abstract T visitAssign(AST node);
 
 	protected abstract T visitBlock(AST node);
 
@@ -73,25 +69,15 @@ public abstract class ASTBaseVisitor<T> {
 
 	// protected abstract T visitIf(AST node);
 
-	// protected abstract T visitLt(AST node);
-
-	protected abstract T visitMinus(AST node);
-
-	protected abstract T visitMod(AST node);
-
 	protected abstract T visitNum(AST node);
-
-	protected abstract T visitOver(AST node);
-
-	protected abstract T visitPlus(AST node);
 
 	// protected abstract T visitRead(AST node);
 
 	// protected abstract T visitRepeat(AST node);
 
-	protected abstract T visitVal(AST node);
+	protected abstract T visitRelatOp(AST node);
 
-	protected abstract T visitTimes(AST node);
+	protected abstract T visitVal(AST node);
 
 	protected abstract T visitVarDecl(AST node);
 
@@ -99,5 +85,5 @@ public abstract class ASTBaseVisitor<T> {
 
 	protected abstract T visitVarUse(AST node);
 
-	
+	protected abstract T visitWhile(AST node);
 }

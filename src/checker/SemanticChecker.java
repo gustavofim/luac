@@ -1,19 +1,28 @@
 package checker;
 
 import static ast.NodeKind.ARGS_NODE;
+import static ast.NodeKind.ARIT_OP_NODE;
 import static ast.NodeKind.ASSIGN_NODE;
 import static ast.NodeKind.BLOCK_NODE;
+import static ast.NodeKind.EQ_NODE;
 import static ast.NodeKind.EXP_LIST_NODE;
+import static ast.NodeKind.GE_NODE;
+import static ast.NodeKind.GT_NODE;
+import static ast.NodeKind.LE_NODE;
+import static ast.NodeKind.LT_NODE;
 import static ast.NodeKind.MINUS_NODE;
 import static ast.NodeKind.MOD_NODE;
+import static ast.NodeKind.NEQ_NODE;
 import static ast.NodeKind.NUM_NODE;
 import static ast.NodeKind.OVER_NODE;
 import static ast.NodeKind.PLUS_NODE;
+import static ast.NodeKind.RELAT_OP_NODE;
 import static ast.NodeKind.TIMES_NODE;
 import static ast.NodeKind.VAL_NODE;
 import static ast.NodeKind.VAR_DECL_NODE;
 import static ast.NodeKind.VAR_LIST_NODE;
 import static ast.NodeKind.VAR_USE_NODE;
+import static ast.NodeKind.WHILE_NODE;
 
 import ast.AST;
 import ast.NodeKind;
@@ -23,6 +32,7 @@ import parser.LuaParser.ArgListContext;
 import parser.LuaParser.AssignContext;
 import parser.LuaParser.BlockContext;
 import parser.LuaParser.ChunkContext;
+import parser.LuaParser.ComparisonContext;
 import parser.LuaParser.ExplistContext;
 import parser.LuaParser.FunctioncallContext;
 import parser.LuaParser.MultDivModContext;
@@ -31,6 +41,7 @@ import parser.LuaParser.StringContext;
 import parser.LuaParser.VarContext;
 import parser.LuaParser.VarOrExpContext;
 import parser.LuaParser.VarlistContext;
+import parser.LuaParser.WhileContext;
 import table.IdentifierTable;
 
 /*
@@ -165,16 +176,50 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         return new AST(VAR_USE_NODE, ctx.NAME().getSymbol().getText(), (double)ctx.NAME().getSymbol().getLine());
     }
 
+    // @Override
+    // public AST visitAddSub(AddSubContext ctx) {
+    //     NodeKind kind;
+    //     String op = ctx.operatorAddSub().getText();
+    //     if (op.equals("+")) {
+    //         kind = PLUS_NODE;
+    //     } else {
+    //         kind = MINUS_NODE;
+    //     }
+	// 	AST node = AST.newSubtree(kind);
+	// 	ctx.exp().forEach((child) -> {
+	// 		node.addChild(visit(child));
+	// 	});
+    //     return node;
+    // }
+
+    // @Override
+    // public AST visitMultDivMod(MultDivModContext ctx) {
+    //     NodeKind kind;
+    //     String op = ctx.operatorMulDivMod().getText();
+    //     if (op.equals("*")) {
+    //         kind = TIMES_NODE;
+    //     } else  if (op.equals("/")) {
+    //         kind = OVER_NODE;
+    //     } else {
+    //         kind = MOD_NODE;
+    //     }
+    //     AST node = AST.newSubtree(kind);
+	// 	ctx.exp().forEach((child) -> {
+	// 		node.addChild(visit(child));
+	// 	});
+    //     return node;
+    // }
+
     @Override
     public AST visitAddSub(AddSubContext ctx) {
-        NodeKind kind;
+        double kind;
         String op = ctx.operatorAddSub().getText();
         if (op.equals("+")) {
-            kind = PLUS_NODE;
+            kind = 1;
         } else {
-            kind = MINUS_NODE;
+            kind = 2;
         }
-		AST node = AST.newSubtree(kind);
+		AST node = new AST(ARIT_OP_NODE, op, kind);
 		ctx.exp().forEach((child) -> {
 			node.addChild(visit(child));
 		});
@@ -183,16 +228,16 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitMultDivMod(MultDivModContext ctx) {
-        NodeKind kind;
+        double kind;
         String op = ctx.operatorMulDivMod().getText();
         if (op.equals("*")) {
-            kind = TIMES_NODE;
+            kind = 3;
         } else  if (op.equals("/")) {
-            kind = OVER_NODE;
+            kind = 4;
         } else {
-            kind = MOD_NODE;
+            kind = 5;
         }
-        AST node = AST.newSubtree(kind);
+		AST node = new AST(ARIT_OP_NODE, op, kind);
 		ctx.exp().forEach((child) -> {
 			node.addChild(visit(child));
 		});
@@ -222,6 +267,38 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     public AST visitArgList(ArgListContext ctx) {
         if (ctx.explist() == null) return null;
         return visit(ctx.explist());
+    }
+
+    @Override
+    public AST visitComparison(ComparisonContext ctx) {
+        double kind;
+        String op = ctx.operatorComparison().getText();
+        if (op.equals("==")) {
+            kind = 1;
+        } else  if (op.equals("~=")) {
+            kind = 2;
+        } else  if (op.equals(">")) {
+            kind = 3;
+        } else  if (op.equals("<")) {
+            kind = 4;
+        } else  if (op.equals(">=")) {
+            kind = 5;
+        } else {
+            kind = 6;
+        }
+		AST node = new AST(RELAT_OP_NODE, op, kind);
+		ctx.exp().forEach((child) -> {
+			node.addChild(visit(child));
+		});
+        return node;
+    }
+
+    @Override
+    public AST visitWhile(WhileContext ctx) {
+        AST node = AST.newSubtree(WHILE_NODE);
+        node.addChild(visit(ctx.exp()));
+        node.addChild(visit(ctx.block()));
+        return node;
     }
 
     // ----------------------------------------------------------------------------

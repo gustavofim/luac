@@ -98,57 +98,49 @@ public class Gen extends ASTBaseVisitor<Integer> {
     }
 
     @Override
-    protected Integer visitMinus(AST node) {
+    protected Integer visitAritOp(AST node) {
         visit(node.getChild(0));
         visit(node.getChild(1));
         System.out.printf("\t".repeat(ident));
-        System.out.println("ldc 2");
+        System.out.printf("ldc %.0f\n", node.numData);
         System.out.printf("\t".repeat(ident));
         System.out.println("invokestatic LuaRuntime/Runtime/aritOp(LLuaRuntime/LuaType;LLuaRuntime/LuaType;I)LLuaRuntime/LuaType;");
         return 0;
     }
 
     @Override
-    protected Integer visitPlus(AST node) {
+    protected Integer visitRelatOp(AST node) {
         visit(node.getChild(0));
         visit(node.getChild(1));
         System.out.printf("\t".repeat(ident));
-        System.out.println("ldc 1");
+        System.out.printf("ldc %.0f\n", node.numData);
         System.out.printf("\t".repeat(ident));
-        System.out.println("invokestatic LuaRuntime/Runtime/aritOp(LLuaRuntime/LuaType;LLuaRuntime/LuaType;I)LLuaRuntime/LuaType;");
+        System.out.println("invokestatic LuaRuntime/Runtime/relatOp(LLuaRuntime/LuaType;LLuaRuntime/LuaType;I)LLuaRuntime/LuaType;");
         return 0;
     }
 
+    private int whileCount = 0;
+
     @Override
-    protected Integer visitTimes(AST node) {
+    protected Integer visitWhile(AST node) {
+        System.out.printf("\t".repeat(ident));
+        System.out.printf("while%d:\n", whileCount);
+        ident++;
         visit(node.getChild(0));
+        System.out.printf("\t".repeat(ident));
+        System.out.printf("invokeinterface LuaRuntime/LuaType/toBoolean()Z 1\n");
+        ident--;
+        System.out.printf("\t".repeat(ident));
+        System.out.printf("ifeq whileEnd%d\n", whileCount);
+        ident++;
         visit(node.getChild(1));
+        ident--;
         System.out.printf("\t".repeat(ident));
-        System.out.println("ldc 3");
+        System.out.printf("goto while%d\n", whileCount);
         System.out.printf("\t".repeat(ident));
-        System.out.println("invokestatic LuaRuntime/Runtime/aritOp(LLuaRuntime/LuaType;LLuaRuntime/LuaType;I)LLuaRuntime/LuaType;");
+        System.out.printf("whileEnd%d:\n", whileCount);
+        whileCount++;
         return 0;
     }
 
-    @Override
-    protected Integer visitOver(AST node) {
-        visit(node.getChild(0));
-        visit(node.getChild(1));
-        System.out.printf("\t".repeat(ident));
-        System.out.println("ldc 4");
-        System.out.printf("\t".repeat(ident));
-        System.out.println("invokestatic LuaRuntime/Runtime/aritOp(LLuaRuntime/LuaType;LLuaRuntime/LuaType;I)LLuaRuntime/LuaType;");
-        return 0;
-    }
-
-    @Override
-    protected Integer visitMod(AST node) {
-        visit(node.getChild(0));
-        visit(node.getChild(1));
-        System.out.printf("\t".repeat(ident));
-        System.out.println("ldc 5");
-        System.out.printf("\t".repeat(ident));
-        System.out.println("invokestatic LuaRuntime/Runtime/aritOp(LLuaRuntime/LuaType;LLuaRuntime/LuaType;I)LLuaRuntime/LuaType;");
-        return 0;
-    }
 }
