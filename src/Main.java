@@ -40,9 +40,9 @@ public class Main {
 		// fazer a análise.
 		SemanticChecker checker = new SemanticChecker();
 		checker.visit(tree);
-		checker.printTables();
+		// checker.printTables();
 
-		System.out.println("PARSE SUCCESSFUL!");
+		// System.out.println("PARSE SUCCESSFUL!");
 
 		checker.printAST();
 		Gen gen = new Gen();

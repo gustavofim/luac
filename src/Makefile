@@ -34,9 +34,14 @@ javac:
 	$(JAVAC) $(CLASS_PATH_OPTION) -d $(BIN_PATH) */*.java Main.java
 # Executa o front-end. Comando: $ make run FILE=arquivo_de_teste
 # 'Main' é a classe com a função principal
-run:
-	$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/io/$(FILE) 2> tree.dot
-	dot -Tpdf tree.dot -o tree.pdf
+run: 
+	@echo "Running: $(FILE).lua"
+	@mkdir -p out/
+	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/io/$(FILE).lua 2> tree.dot > out/$(FILE).j
+	@java -jar jasmin.jar out/$(FILE).j > /dev/null
+	@java -cp "LuaRuntime.jar:." Program
+	@rm Program.class
+	@dot -Tpdf tree.dot -o tree.pdf
 test:
 	@echo "Running $(FILE):"
 	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/lua-5.4.6-tests/$(FILE)
@@ -44,4 +49,9 @@ debug:
 	cd $(BIN_PATH) && $(GRUN) $(GEN_PATH).$(GRAMMAR_NAME) chunk -gui $(ROOT)/io/$(FILE)
 # Remove os arquivos gerados pelo ANTLR
 clean:
-	@rm -rf $(GEN_PATH) $(BIN_PATH)
+	@rm -rf $(GEN_PATH) $(BIN_PATH) out/
+runtime: LuaRuntime/*.java
+	@echo "Recompiling lua runtime..."
+	@javac LuaRuntime/*.java
+	@jar -cf LuaRuntime.jar LuaRuntime/*.class
+	@rm LuaRuntime/*.class

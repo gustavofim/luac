@@ -1,6 +1,7 @@
 src/bin/
 src/parser/
 src/.antlr/
+src/out/
 .vscode/
 *.class
 *.pdf
