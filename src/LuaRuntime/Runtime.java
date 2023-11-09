@@ -59,20 +59,26 @@ public class Runtime {
             return new LuaBoolean(false);
         }
 
-        Double aNum = a.toDouble();
-        Double bNum = b.toDouble();
+        int cmp;
+        if (a instanceof LuaNumber) {
+            cmp = a.toDouble().compareTo(b.toDouble());
+        } else {
+            cmp = a.toString().compareTo(b.toString());
+        }
 
         switch (op) {
             case 1:
-                return new LuaBoolean(aBool > bBool);
+                return new LuaBoolean(cmp == 0);
             case 2:
-                return new LuaBoolean(aBool < bBool);
+                return new LuaBoolean(cmp != 0);
             case 3:
-                return new LuaBoolean(aBool >= bBool);
+                return new LuaBoolean(cmp > 0);
             case 4:
-                return new LuaBoolean(aBool / bBool);
+                return new LuaBoolean(cmp < 0);
             case 5:
-                return new LuaBoolean(aBool % bBool);
+                return new LuaBoolean(cmp >= 0);
+            case 6:
+                return new LuaBoolean(cmp <= 0);
             default:
                 // Should never be accessed
                 return new LuaNil();
