@@ -26,7 +26,7 @@ public enum NodeKind {
     PLUS_NODE,
     // PROGRAM_NODE,
     // READ_NODE,
-    // REPEAT_NODE,
+    REPEAT_NODE,
     // STAT_NODE,
     RELAT_OP_NODE,
     TIMES_NODE,
@@ -58,7 +58,7 @@ public enum NodeKind {
             case PLUS_NODE:     return "+";
             // case PROGRAM_NODE:  return "program";
             // case READ_NODE:     return "read";
-            // case REPEAT_NODE:   return "repeat";
+            case REPEAT_NODE:   return "repeat";
             // case STAT_NODE:     return "stat";
             case RELAT_OP_NODE:    return "";
             case TIMES_NODE:    return "*";

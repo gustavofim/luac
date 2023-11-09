@@ -17,6 +17,7 @@ import static ast.NodeKind.NUM_NODE;
 import static ast.NodeKind.OVER_NODE;
 import static ast.NodeKind.PLUS_NODE;
 import static ast.NodeKind.RELAT_OP_NODE;
+import static ast.NodeKind.REPEAT_NODE;
 import static ast.NodeKind.TIMES_NODE;
 import static ast.NodeKind.VAL_NODE;
 import static ast.NodeKind.VAR_DECL_NODE;
@@ -37,6 +38,7 @@ import parser.LuaParser.ExplistContext;
 import parser.LuaParser.FunctioncallContext;
 import parser.LuaParser.MultDivModContext;
 import parser.LuaParser.NumberContext;
+import parser.LuaParser.RepeatContext;
 import parser.LuaParser.StringContext;
 import parser.LuaParser.VarContext;
 import parser.LuaParser.VarOrExpContext;
@@ -298,6 +300,14 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         AST node = AST.newSubtree(WHILE_NODE);
         node.addChild(visit(ctx.exp()));
         node.addChild(visit(ctx.block()));
+        return node;
+    }
+
+    @Override
+    public AST visitRepeat(RepeatContext ctx) {
+        AST node = AST.newSubtree(REPEAT_NODE);
+        node.addChild(visit(ctx.block()));
+        node.addChild(visit(ctx.exp()));
         return node;
     }
 

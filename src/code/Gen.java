@@ -47,6 +47,7 @@ public class Gen extends ASTBaseVisitor<Integer> {
         visit(node.getChild(1).getChild(0));
         System.out.printf("\t".repeat(ident));
         System.out.println("invokestatic LuaRuntime/Runtime/setVar(Ljava/lang/String;LLuaRuntime/LuaType;)V");
+        System.out.println();
         return 0;
     }
 
@@ -69,6 +70,7 @@ public class Gen extends ASTBaseVisitor<Integer> {
                 System.out.println("invokestatic LuaRuntime/Runtime/print(LLuaRuntime/LuaType;)V");
             }
         }
+        System.out.println();
         return 0;
     }
 
@@ -76,6 +78,7 @@ public class Gen extends ASTBaseVisitor<Integer> {
     protected Integer visitVarDecl(AST node) {
         System.out.printf("\t".repeat(ident));
         System.out.printf("ldc \"%s\"\n", node.data);
+        System.out.println();
         return 0;
     }
 
@@ -85,6 +88,7 @@ public class Gen extends ASTBaseVisitor<Integer> {
         System.out.printf("ldc2_w %f\n", node.numData);
         System.out.printf("\t".repeat(ident));
         System.out.println("invokestatic LuaRuntime/Runtime/wrapConst(D)LLuaRuntime/LuaType;");
+        System.out.println();
         return 0;
     }
 
@@ -94,6 +98,7 @@ public class Gen extends ASTBaseVisitor<Integer> {
         System.out.printf("ldc \"%s\"\n", node.data);
         System.out.printf("\t".repeat(ident));
         System.out.println("invokestatic LuaRuntime/Runtime/wrapConst(Ljava/lang/String;)LLuaRuntime/LuaType;");
+        System.out.println();
         return 0;
     }
 
@@ -105,6 +110,7 @@ public class Gen extends ASTBaseVisitor<Integer> {
         System.out.printf("ldc %.0f\n", node.numData);
         System.out.printf("\t".repeat(ident));
         System.out.println("invokestatic LuaRuntime/Runtime/aritOp(LLuaRuntime/LuaType;LLuaRuntime/LuaType;I)LLuaRuntime/LuaType;");
+        System.out.println();
         return 0;
     }
 
@@ -116,6 +122,7 @@ public class Gen extends ASTBaseVisitor<Integer> {
         System.out.printf("ldc %.0f\n", node.numData);
         System.out.printf("\t".repeat(ident));
         System.out.println("invokestatic LuaRuntime/Runtime/relatOp(LLuaRuntime/LuaType;LLuaRuntime/LuaType;I)LLuaRuntime/LuaType;");
+        System.out.println();
         return 0;
     }
 
@@ -139,7 +146,28 @@ public class Gen extends ASTBaseVisitor<Integer> {
         System.out.printf("goto while%d\n", whileCount);
         System.out.printf("\t".repeat(ident));
         System.out.printf("whileEnd%d:\n", whileCount);
+        System.out.println();
         whileCount++;
+        return 0;
+    }
+
+    private int repeatCount = 0;
+
+    @Override
+    protected Integer visitRepeat(AST node) {
+        System.out.printf("\t".repeat(ident));
+        System.out.printf("repeat%d:\n", repeatCount);
+        ident++;
+        visit(node.getChild(0));
+        visit(node.getChild(1));
+        System.out.printf("\t".repeat(ident));
+        System.out.printf("invokeinterface LuaRuntime/LuaType/toBoolean()Z 1\n");
+        System.out.printf("\t".repeat(ident));
+        System.out.printf("ifeq repeat%d\n", repeatCount);
+        ident--;
+        System.out.println();
+
+        repeatCount++;
         return 0;
     }
 
