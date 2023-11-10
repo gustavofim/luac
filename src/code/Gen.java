@@ -1,174 +1,162 @@
 package code;
 
+import java.util.ArrayList;
+
 import ast.AST;
 import ast.ASTBaseVisitor;
 
-public class Gen extends ASTBaseVisitor<Integer> {
-    private int ident = 1;
+public class Gen extends ASTBaseVisitor<Void> {
+    private int ident = 0;
+    private ArrayList<String> code = new ArrayList<String>();
+
     @Override
     public void execute(AST root) {
-        System.out.println(".class public Program");
-        System.out.println(".super java/lang/Object\n");
-        System.out.println(".method public static main([Ljava/lang/String;)V");
-        System.out.println("\t.limit locals 100");
-        System.out.println("\t.limit stack 100\n");
+        emit(".class public Program");
+        emit(".super java/lang/Object", true);
+        emit(".method public static main([Ljava/lang/String;)V");
+        ident++;
+        emit(".limit locals 10");
+        emit(".limit stack 10", true);
         visit(root);
-        System.out.println("\treturn");
-        System.out.println(".end method");
+        emit("return");
+        ident--;
+        emit(".end method");
+        dump();
+    }
+
+    private void dump() {
+        code.forEach(line -> System.out.printf(line));
+    }
+
+    private void emit(String line) {
+        code.add(String.format("%s%s\n", "\t".repeat(ident), line));
+    }
+
+    private void emit(String line, boolean newLine) {
+        emit(line);
+        if (newLine) {
+            code.add("\n");
+        }
     }
 
     @Override
-    protected Integer visitBlock(AST node) {
+    protected Void visitBlock(AST node) {
         for (int i = 0; i < node.getChildCount(); i++) {
             visit(node.getChild(i));
         }
-        return 0;
+        return null;
     }
 
     @Override
-    protected Integer visitArgs(AST node) {
+    protected Void visitArgs(AST node) {
         for (int i = 0; i < node.getChildCount(); i++) {
             visit(node.getChild(i));
         }
-        return 0;
+        return null;
     }
 
     @Override
-    protected Integer visitExpList(AST node) {
+    protected Void visitExpList(AST node) {
         for (int i = 0; i < node.getChildCount(); i++) {
             visit(node.getChild(i));
         }
-        return 0;
+        return null;
     }
 
     @Override
-    protected Integer visitAssign(AST node) {
+    protected Void visitAssign(AST node) {
         visit(node.getChild(0).getChild(0));
         visit(node.getChild(1).getChild(0));
-        System.out.printf("\t".repeat(ident));
-        System.out.println("invokestatic luaruntime/Runtime/setVar(Ljava/lang/String;Lluaruntime/LuaType;)V");
-        System.out.println();
-        return 0;
+        emit("invokestatic luaruntime/Runtime/setVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+        return null;
     }
 
     @Override
-    protected Integer visitVarUse(AST node) {
+    protected Void visitVarUse(AST node) {
         if (node.getChildCount() == 0) {
-            System.out.printf("\t".repeat(ident));
-            System.out.printf("ldc \"%s\"\n", node.data);
-            System.out.printf("\t".repeat(ident));
-            System.out.println("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;");
+            emit(String.format("ldc \"%s\"", node.data));
+            emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
         } else {
             // Args
             visit(node.getChild(0));
-            // System.out.printf("\n%s\n", node.data);
             if (node.data.equals("print")) {
-                // System.out.println("\tgetstatic java/lang/System/out Ljava/io/PrintStream;");
-                // System.out.println("\tswap									; Pass obj toString");
-                // System.out.println("\tinvokevirtual java/io/PrintStream/println(Ljava/lang/Object;)V");
-                System.out.printf("\t".repeat(ident));
-                System.out.println("invokestatic luaruntime/Runtime/print(Lluaruntime/LuaType;)V");
+                emit("invokestatic luaruntime/Runtime/print(Lluaruntime/LuaType;)V", true);
             }
         }
-        System.out.println();
-        return 0;
+        return null;
     }
 
     @Override
-    protected Integer visitVarDecl(AST node) {
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("ldc \"%s\"\n", node.data);
-        System.out.println();
-        return 0;
+    protected Void visitVarDecl(AST node) {
+        emit(String.format("ldc \"%s\"", node.data), true);
+        return null;
     }
 
     @Override
-    protected Integer visitNum(AST node) {
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("ldc2_w %f\n", node.numData);
-        System.out.printf("\t".repeat(ident));
-        System.out.println("invokestatic luaruntime/Runtime/wrapConst(D)Lluaruntime/LuaType;");
-        System.out.println();
-        return 0;
+    protected Void visitNum(AST node) {
+        emit(String.format("ldc2_w %f", node.numData));
+        emit("invokestatic luaruntime/Runtime/wrapConst(D)Lluaruntime/LuaType;", true);
+        return null;
     }
 
     @Override
-    protected Integer visitVal(AST node) {
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("ldc \"%s\"\n", node.data);
-        System.out.printf("\t".repeat(ident));
-        System.out.println("invokestatic luaruntime/Runtime/wrapConst(Ljava/lang/String;)Lluaruntime/LuaType;");
-        System.out.println();
-        return 0;
+    protected Void visitVal(AST node) {
+        emit(String.format("ldc \"%s\"", node.data));
+        emit("invokestatic luaruntime/Runtime/wrapConst(Ljava/lang/String;)Lluaruntime/LuaType;", true);
+        return null;
     }
 
     @Override
-    protected Integer visitAritOp(AST node) {
+    protected Void visitAritOp(AST node) {
         visit(node.getChild(0));
         visit(node.getChild(1));
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("ldc %.0f\n", node.numData);
-        System.out.printf("\t".repeat(ident));
-        System.out.println("invokestatic luaruntime/Runtime/aritOp(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;");
-        System.out.println();
-        return 0;
+        emit(String.format("ldc %.0f", node.numData));
+        emit("invokestatic luaruntime/Runtime/aritOp(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
+        return null;
     }
 
     @Override
-    protected Integer visitRelatOp(AST node) {
+    protected Void visitRelatOp(AST node) {
         visit(node.getChild(0));
         visit(node.getChild(1));
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("ldc %.0f\n", node.numData);
-        System.out.printf("\t".repeat(ident));
-        System.out.println("invokestatic luaruntime/Runtime/relatOp(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;");
-        System.out.println();
-        return 0;
+        emit(String.format("ldc %.0f", node.numData));
+        emit("invokestatic luaruntime/Runtime/relatOp(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
+        return null;
     }
 
     private int whileCount = 0;
 
     @Override
-    protected Integer visitWhile(AST node) {
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("while%d:\n", whileCount);
+    protected Void visitWhile(AST node) {
+        emit(String.format("while%d:", whileCount));
         ident++;
         visit(node.getChild(0));
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("invokeinterface luaruntime/LuaType/toBoolean()Z 1\n");
+        emit("invokeinterface luaruntime/LuaType/toBoolean()Z 1\n");
         ident--;
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("ifeq whileEnd%d\n", whileCount);
+        emit(String.format("ifeq whileEnd%d", whileCount));
         ident++;
         visit(node.getChild(1));
         ident--;
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("goto while%d\n", whileCount);
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("whileEnd%d:\n", whileCount);
-        System.out.println();
+        emit(String.format("goto while%d", whileCount));
+        emit(String.format("whileEnd%d:", whileCount), true);
         whileCount++;
-        return 0;
+        return null;
     }
 
     private int repeatCount = 0;
 
     @Override
-    protected Integer visitRepeat(AST node) {
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("repeat%d:\n", repeatCount);
+    protected Void visitRepeat(AST node) {
+        emit(String.format("repeat%d:", repeatCount));
         ident++;
         visit(node.getChild(0));
         visit(node.getChild(1));
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("invokeinterface luaruntime/LuaType/toBoolean()Z 1\n");
-        System.out.printf("\t".repeat(ident));
-        System.out.printf("ifeq repeat%d\n", repeatCount);
+        emit("invokeinterface luaruntime/LuaType/toBoolean()Z 1");
+        emit(String.format("ifeq repeat%d", repeatCount), true);
         ident--;
-        System.out.println();
 
         repeatCount++;
-        return 0;
+        return null;
     }
 
 }
