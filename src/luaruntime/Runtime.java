@@ -1,4 +1,4 @@
-package LuaRuntime;
+package luaruntime;
 
 import java.util.HashMap;
 

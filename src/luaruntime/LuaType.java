@@ -1,4 +1,4 @@
-package LuaRuntime;
+package luaruntime;
 
 public interface LuaType {
     boolean toBoolean();

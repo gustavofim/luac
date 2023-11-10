@@ -1,4 +1,4 @@
-package LuaRuntime;
+package luaruntime;
 
 public class LuaBoolean implements LuaType {
     private boolean data;

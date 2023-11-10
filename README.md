@@ -31,11 +31,11 @@ Strings may be coerced to number for arithmetic operations (not for boolean).
 ## Notes
 - Assignment: varlist -> var -> identifier
 - Evaluation: varOrExp -> var -> identifier
-- Gen jar: `jar -cf LuaRuntime.jar LuaRuntime/*.class`
+- Gen jar: `jar -cf luaruntime.jar luaruntime/*.class`
 
 ### Jasmin stuff
 - Compile: `java -jar jasmin.jar program.j`
-- Run with runtime: `java -cp "LuaRuntime.jar:." Program`
+- Run with runtime: `java -cp "luaruntime.jar:." Program`
 - Small example:
 
 ```java
@@ -47,13 +47,13 @@ Strings may be coerced to number for arithmetic operations (not for boolean).
 	.limit stack 100
 
 	ldc "011"
-	invokestatic LuaRuntime/Runtime/wrapConst(Ljava/lang/String;)LLuaRuntime/LuaType;
+	invokestatic luaruntime/Runtime/wrapConst(Ljava/lang/String;)Lluaruntime/LuaType;
 
 	ldc2_w 9.5 ; Pushing double
-	invokestatic LuaRuntime/Runtime/wrapConst(D)LLuaRuntime/LuaType;
+	invokestatic luaruntime/Runtime/wrapConst(D)Lluaruntime/LuaType;
 
 	ldc 1
-	invokestatic LuaRuntime/Runtime/aritOp(LLuaRuntime/LuaType;LLuaRuntime/LuaType;I)LLuaRuntime/LuaType;
+	invokestatic luaruntime/Runtime/aritOp(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
 	swap									; Pass obj "toString"

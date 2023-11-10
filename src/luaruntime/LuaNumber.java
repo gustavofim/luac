@@ -1,4 +1,4 @@
-package LuaRuntime;
+package luaruntime;
 
 public class LuaNumber implements LuaType {
     private double data;

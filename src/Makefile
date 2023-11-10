@@ -40,7 +40,7 @@ run:
 	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/io/$(FILE).lua 2> tree.dot > out/$(FILE).j
 	@dot -Tpdf tree.dot -o tree.pdf
 	@java -jar jasmin.jar out/$(FILE).j > /dev/null
-	@java -cp "LuaRuntime.jar:." Program
+	@java -cp "luaruntime.jar:." Program
 	@rm Program.class
 test:
 	@echo "Running $(FILE):"
@@ -49,9 +49,10 @@ debug:
 	cd $(BIN_PATH) && $(GRUN) $(GEN_PATH).$(GRAMMAR_NAME) chunk -gui $(ROOT)/io/$(FILE)
 # Remove os arquivos gerados pelo ANTLR
 clean:
-	@rm -rf $(GEN_PATH) $(BIN_PATH) out/
-runtime: LuaRuntime/*.java
+	rm -rf $(GEN_PATH) $(BIN_PATH) out/
+	rm luaruntime.jar tree.*
+runtime: luaruntime/*.java
 	@echo "Recompiling lua runtime..."
-	@javac LuaRuntime/*.java
-	@jar -cf LuaRuntime.jar LuaRuntime/*.class
-	@rm LuaRuntime/*.class
+	@javac luaruntime/*.java
+	@jar -cf luaruntime.jar luaruntime/*.class
+	@rm luaruntime/*.class

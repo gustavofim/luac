@@ -1,4 +1,4 @@
-package LuaRuntime;
+package luaruntime;
 
 public class LuaNil implements LuaType {
     public Double toDouble() {

@@ -1,4 +1,4 @@
-package LuaRuntime;
+package luaruntime;
 
 public class LuaString implements LuaType {
     private String data;
