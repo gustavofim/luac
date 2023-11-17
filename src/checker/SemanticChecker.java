@@ -6,6 +6,7 @@ import static ast.NodeKind.ASSIGN_NODE;
 import static ast.NodeKind.BLOCK_NODE;
 import static ast.NodeKind.EQ_NODE;
 import static ast.NodeKind.EXP_LIST_NODE;
+import static ast.NodeKind.FUNC_DEF_NODE;
 import static ast.NodeKind.GE_NODE;
 import static ast.NodeKind.GT_NODE;
 import static ast.NodeKind.LE_NODE;
@@ -35,8 +36,13 @@ import parser.LuaParser.BlockContext;
 import parser.LuaParser.ChunkContext;
 import parser.LuaParser.ComparisonContext;
 import parser.LuaParser.ExplistContext;
+import parser.LuaParser.FuncbodyContext;
+import parser.LuaParser.FuncnameContext;
+import parser.LuaParser.FunctionDefContext;
+import parser.LuaParser.FunctionDefExpContext;
 import parser.LuaParser.FunctioncallContext;
 import parser.LuaParser.MultDivModContext;
+import parser.LuaParser.NamelistContext;
 import parser.LuaParser.NumberContext;
 import parser.LuaParser.RepeatContext;
 import parser.LuaParser.StringContext;
@@ -178,40 +184,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         return new AST(VAR_USE_NODE, ctx.NAME().getSymbol().getText(), (double)ctx.NAME().getSymbol().getLine());
     }
 
-    // @Override
-    // public AST visitAddSub(AddSubContext ctx) {
-    //     NodeKind kind;
-    //     String op = ctx.operatorAddSub().getText();
-    //     if (op.equals("+")) {
-    //         kind = PLUS_NODE;
-    //     } else {
-    //         kind = MINUS_NODE;
-    //     }
-	// 	AST node = AST.newSubtree(kind);
-	// 	ctx.exp().forEach((child) -> {
-	// 		node.addChild(visit(child));
-	// 	});
-    //     return node;
-    // }
-
-    // @Override
-    // public AST visitMultDivMod(MultDivModContext ctx) {
-    //     NodeKind kind;
-    //     String op = ctx.operatorMulDivMod().getText();
-    //     if (op.equals("*")) {
-    //         kind = TIMES_NODE;
-    //     } else  if (op.equals("/")) {
-    //         kind = OVER_NODE;
-    //     } else {
-    //         kind = MOD_NODE;
-    //     }
-    //     AST node = AST.newSubtree(kind);
-	// 	ctx.exp().forEach((child) -> {
-	// 		node.addChild(visit(child));
-	// 	});
-    //     return node;
-    // }
-
     @Override
     public AST visitAddSub(AddSubContext ctx) {
         double kind;
@@ -310,6 +282,44 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         node.addChild(visit(ctx.exp()));
         return node;
     }
+
+    @Override
+    public AST visitFunctionDef(FunctionDefContext ctx) {
+        AST node = AST.newSubtree(ASSIGN_NODE);
+        node.addChild(visit(ctx.funcname()));
+        node.addChild(AST.newSubtree(EXP_LIST_NODE, visit(ctx.funcbody())));
+        return node;
+    }
+
+    @Override
+    public AST visitFuncname(FuncnameContext ctx) {
+        AST node = AST.newSubtree(VAR_LIST_NODE);
+        node.addChild(new AST(VAR_USE_NODE, ctx.NAME().get(0).getSymbol().getText(), (double)ctx.NAME().get(0).getSymbol().getLine()));
+        return node;
+    }
+
+    @Override
+    public AST visitFuncbody(FuncbodyContext ctx) {
+        AST node = AST.newSubtree(FUNC_DEF_NODE);
+        node.addChild(visit(ctx.getChild(1)));
+        node.addChild(visit(ctx.block()));
+        // node = AST.newSubtree(EXP_LIST_NODE, node);
+        return node;
+    }
+
+    @Override
+    public AST visitNamelist(NamelistContext ctx) {
+        AST node = AST.newSubtree(ARGS_NODE);
+		ctx.NAME().forEach((child) -> {
+			node.addChild(new AST(VAR_DECL_NODE, child.getSymbol().getText(), (double)child.getSymbol().getLine()));
+		});
+        return node;
+    }
+
+    // @Override
+    // public AST visitFunctionDefExp(FunctionDefExpContext ctx) {
+    //     return visit(ctx.getChild(0));
+    // }
 
     // ----------------------------------------------------------------------------
 

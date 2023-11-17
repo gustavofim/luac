@@ -5,6 +5,8 @@ import java.util.HashMap;
 public class Runtime {
     private static HashMap<String, LuaType> vars = new HashMap<String, LuaType>();
 
+    private final static LuaNil luaNil = new LuaNil();
+
     public static LuaType wrapConst(double number) {
         LuaNumber newNum = new LuaNumber(number);
         return newNum;
@@ -20,7 +22,7 @@ public class Runtime {
     }
 
     public static LuaType getVar(String id) {
-        return vars.getOrDefault(id, new LuaNil());
+        return vars.getOrDefault(id, luaNil);
     }
 
     public static LuaType aritOp(LuaType a, LuaType b, int op) {
@@ -50,7 +52,7 @@ public class Runtime {
                 return new LuaNumber(aNum % bNum);
             default:
                 // Should never be accessed
-                return new LuaNil();
+                return luaNil;
         }
     }
 
@@ -81,7 +83,7 @@ public class Runtime {
                 return new LuaBoolean(cmp <= 0);
             default:
                 // Should never be accessed
-                return new LuaNil();
+                return luaNil;
         }
     }
 
