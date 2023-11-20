@@ -1,9 +1,11 @@
 package luaruntime;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 public class Runtime {
-    private static HashMap<String, LuaType> vars = new HashMap<String, LuaType>();
+    // private static HashMap<String, LuaType> v = new HashMap<String, LuaType>();
+    private static Stack<HashMap<String, LuaType>> vars = new Stack<HashMap<String, LuaType>>();
 
     private final static LuaNil luaNil = new LuaNil();
 
@@ -17,12 +19,21 @@ public class Runtime {
         return newStr;
     }
 
+    public static LuaType wrapConst(int i) {
+        LuaFunction newFunc = new LuaFunction(i);
+        return newFunc;
+    }
+
     public static void setVar(String id, LuaType value) {
-        vars.put(id, value);
+        if (vars.empty()) {
+            startScope();
+        }
+        vars.peek().put(id, value);
     }
 
     public static LuaType getVar(String id) {
-        return vars.getOrDefault(id, luaNil);
+        // LuaType ret;
+        return vars.peek().getOrDefault(id, luaNil);
     }
 
     public static LuaType aritOp(LuaType a, LuaType b, int op) {
@@ -89,5 +100,13 @@ public class Runtime {
 
     public static void print(LuaType value) {
         System.out.println(value);
+    }
+
+    public static void startScope() {
+        vars.push(new HashMap<String, LuaType>());
+    }
+
+    public static void endScope() {
+        vars.pop();
     }
 }

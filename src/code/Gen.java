@@ -7,7 +7,9 @@ import ast.ASTBaseVisitor;
 
 public class Gen extends ASTBaseVisitor<Void> {
     private int ident = 0;
-    private ArrayList<String> code = new ArrayList<String>();
+    private boolean isMain = true;
+    private ArrayList<String> mainCode = new ArrayList<String>();
+    private ArrayList<String> funcCode = new ArrayList<String>();
 
     @Override
     public void execute(AST root) {
@@ -25,17 +27,22 @@ public class Gen extends ASTBaseVisitor<Void> {
     }
 
     private void dump() {
-        code.forEach(line -> System.out.printf(line));
+        mainCode.forEach(line -> System.out.printf(line));
+        funcCode.forEach(line -> System.out.printf(line));
     }
 
     private void emit(String line) {
-        code.add(String.format("%s%s\n", "\t".repeat(ident), line));
+        if (isMain) {
+            mainCode.add(String.format("%s%s\n", "\t".repeat(ident), line));
+            return;
+        }
+        funcCode.add(String.format("%s%s\n", "\t".repeat(ident), line));
     }
 
     private void emit(String line, boolean newLine) {
         emit(line);
         if (newLine) {
-            code.add("\n");
+            emit("");
         }
     }
 
@@ -81,6 +88,8 @@ public class Gen extends ASTBaseVisitor<Void> {
             visit(node.getChild(0));
             if (node.data.equals("print")) {
                 emit("invokestatic luaruntime/Runtime/print(Lluaruntime/LuaType;)V", true);
+            } else {
+                emit("pops");
             }
         }
         return null;
@@ -88,7 +97,9 @@ public class Gen extends ASTBaseVisitor<Void> {
 
     @Override
     protected Void visitVarDecl(AST node) {
-        emit(String.format("ldc \"%s\"", node.data), true);
+        if (node.getChildCount() == 0) {
+            emit(String.format("ldc \"%s\"", node.data), true);
+        }
         return null;
     }
 
@@ -156,6 +167,26 @@ public class Gen extends ASTBaseVisitor<Void> {
         ident--;
 
         repeatCount++;
+        return null;
+    }
+
+    @Override
+    protected Void visitFuncDef(AST node) {
+        int nArgs = node.getChild(0).getChildCount();
+        emit(String.format("ldc %d", nArgs));
+        emit("invokestatic luaruntime/Runtime/wrapConst(I)Lluaruntime/LuaType;", true);
+        ident--;
+        isMain = false;
+        emit(String.format(".method public static func([Ljava/lang/String;)V"));
+        ident++;
+        emit(".limit locals 10");
+        emit(".limit stack 10", true);
+        visit(node.getChild(0));
+        emit("return");
+        ident--;
+        emit(".end method");
+        isMain = true;
+        ident++;
         return null;
     }
 
