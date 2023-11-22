@@ -13,10 +13,11 @@ public enum NodeKind {
     BLOCK_NODE,
     EQ_NODE,
     EXP_LIST_NODE,
+    FOR_NODE,
     FUNC_DEF_NODE,
-    IF_NODE,
     GE_NODE,
     GT_NODE,
+    IF_NODE,
     LE_NODE,
     LT_NODE,
     MINUS_NODE,
@@ -46,10 +47,11 @@ public enum NodeKind {
             case BLOCK_NODE:    return "block";
             case EQ_NODE:       return "==";
             case EXP_LIST_NODE: return "exp_list";
+            case FOR_NODE: return "for";
             case FUNC_DEF_NODE: return "def";
-            case IF_NODE:       return "if";
             case GE_NODE:       return ">=";
             case GT_NODE:       return ">";
+            case IF_NODE:       return "if";
             case LE_NODE:       return "<=";
             case LT_NODE:       return "<";
             case MINUS_NODE:    return "-";

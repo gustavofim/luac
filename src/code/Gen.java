@@ -1,5 +1,7 @@
 package code;
 
+import static ast.NodeKind.VAR_USE_NODE;
+
 import java.util.ArrayList;
 
 import ast.AST;
@@ -186,7 +188,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         visit(node.getChild(0));
         emit("return");
         ident--;
-        emit(".end method");
+        emit(".end method", true);
         isMain = true;
         ident++;
         return null;
@@ -211,7 +213,26 @@ public class Gen extends ASTBaseVisitor<Void> {
             visit(node.getChild(2));
             ident--;
         }
-        emit(String.format("ifEnd%d:", count));
+        emit(String.format("ifEnd%d:", count), true);
+        return null;
+    }
+
+    private int forCount = 0;
+
+    @Override
+    protected Void visitFor(AST node) {
+        int count = forCount;
+        forCount++;
+        AST ctrlVar = new AST(
+            VAR_USE_NODE,
+            node.getChild(0) // assign
+                                .getChild(0) // var_list
+                                .getChild(0) // var_decl
+                                .data
+        );
+        visit(node.getChild(0));
+        emit(String.format("for%d:", count));
+        
         return null;
     }
 

@@ -28,6 +28,7 @@ public abstract class ASTBaseVisitor<T> {
 	        case ARIT_OP_NODE:   return visitAritOp(node);
 	        case ASSIGN_NODE:   return visitAssign(node);
 	        case BLOCK_NODE:    return visitBlock(node);
+	        case FOR_NODE:    return visitFor(node);
 	        case FUNC_DEF_NODE:    return visitFuncDef(node);
 	        case EXP_LIST_NODE:    return visitExpList(node);
 	        // case BOOL_VAL_NODE: return visitBoolVal(node);
@@ -63,6 +64,8 @@ public abstract class ASTBaseVisitor<T> {
 	protected abstract T visitAssign(AST node);
 
 	protected abstract T visitBlock(AST node);
+
+	protected abstract T visitFor(AST node);
 
 	protected abstract T visitFuncDef(AST node);
 

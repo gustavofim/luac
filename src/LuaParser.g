@@ -28,8 +28,8 @@ stat
     | WHILE exp DO block END #while
     | REPEAT block UNTIL exp #repeat
     | IF exp THEN block (ELSEIF exp THEN block)* (ELSE block)? END #ifThenElse
-    | FOR NAME ASSIGN exp COMMA exp (COMMA exp)? DO block END #forName
-    | FOR namelist IN explist DO block END #for
+    | FOR NAME ASSIGN exp COMMA exp (COMMA exp)? DO block END #for
+    | FOR namelist IN explist DO block END #genFor
     | FUNCTION funcname funcbody #functionDef
     | LOCAL FUNCTION NAME funcbody #localFunctionDef
     | LOCAL attnamelist (ASSIGN explist)? #local

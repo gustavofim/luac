@@ -26,16 +26,10 @@ public class Runtime {
     }
 
     public static void setGlobalVar(String id, LuaType value) {
-        // if (vars.isEmpty()) {
-        //     startScope();
-        // }
         vars.peekLast().put(id, value);
     }
 
     public static void setLocalVar(String id, LuaType value) {
-        // if (vars.isEmpty()) {
-        //     startScope();
-        // }
         vars.peek().put(id, value);
     }
 
