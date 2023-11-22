@@ -48,9 +48,11 @@ public class Gen extends ASTBaseVisitor<Void> {
 
     @Override
     protected Void visitBlock(AST node) {
+        emit("invokestatic luaruntime/Runtime/startScope()V", true);
         for (int i = 0; i < node.getChildCount(); i++) {
             visit(node.getChild(i));
         }
+        emit("invokestatic luaruntime/Runtime/endScope()V", true);
         return null;
     }
 
@@ -74,7 +76,7 @@ public class Gen extends ASTBaseVisitor<Void> {
     protected Void visitAssign(AST node) {
         visit(node.getChild(0).getChild(0));
         visit(node.getChild(1).getChild(0));
-        emit("invokestatic luaruntime/Runtime/setVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+        emit("invokestatic luaruntime/Runtime/setGlobalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
         return null;
     }
 

@@ -1,11 +1,12 @@
 package luaruntime;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
-import java.util.Stack;
 
 public class Runtime {
     // private static HashMap<String, LuaType> v = new HashMap<String, LuaType>();
-    private static Stack<HashMap<String, LuaType>> vars = new Stack<HashMap<String, LuaType>>();
+    private static Deque<HashMap<String, LuaType>> vars = new ArrayDeque<HashMap<String, LuaType>>();
 
     private final static LuaNil luaNil = new LuaNil();
 
@@ -24,15 +25,28 @@ public class Runtime {
         return newFunc;
     }
 
-    public static void setVar(String id, LuaType value) {
-        if (vars.empty()) {
-            startScope();
-        }
+    public static void setGlobalVar(String id, LuaType value) {
+        // if (vars.isEmpty()) {
+        //     startScope();
+        // }
+        vars.peekLast().put(id, value);
+    }
+
+    public static void setLocalVar(String id, LuaType value) {
+        // if (vars.isEmpty()) {
+        //     startScope();
+        // }
         vars.peek().put(id, value);
     }
 
     public static LuaType getVar(String id) {
-        // LuaType ret;
+        LuaType ret = null;
+
+        for (HashMap<String, LuaType> v : vars)  {
+            ret = v.getOrDefault(id, null);
+            if (ret != null) return ret;
+        }
+
         return vars.peek().getOrDefault(id, luaNil);
     }
 
