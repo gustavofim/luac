@@ -32,6 +32,7 @@ public enum NodeKind {
     // STAT_NODE,
     RELAT_OP_NODE,
     TIMES_NODE,
+    UNARY_OP_NODE,
     VAL_NODE,
     VAR_DECL_NODE,
     VAR_LIST_NODE,
@@ -42,7 +43,7 @@ public enum NodeKind {
 	public String toString() {
 		switch(this) {
             case ARGS_NODE:   return "args";
-            case ARIT_OP_NODE:   return "";
+            case ARIT_OP_NODE:   return "arit_op";
             case ASSIGN_NODE:   return "=";
             case BLOCK_NODE:    return "block";
             case EQ_NODE:       return "==";
@@ -64,8 +65,9 @@ public enum NodeKind {
             // case READ_NODE:     return "read";
             case REPEAT_NODE:   return "repeat";
             // case STAT_NODE:     return "stat";
-            case RELAT_OP_NODE:    return "";
+            case RELAT_OP_NODE:    return "relat_op";
             case TIMES_NODE:    return "*";
+            case UNARY_OP_NODE:    return "unary_op";
             case VAL_NODE:      return "";
             case VAR_DECL_NODE: return "var_decl";
             case VAR_LIST_NODE: return "var_list";
@@ -82,6 +84,7 @@ public enum NodeKind {
 	public static boolean hasData(NodeKind kind) {
 		switch(kind) {
 	        case ARIT_OP_NODE:
+	        case UNARY_OP_NODE:
 	        case RELAT_OP_NODE:
 	        case VAL_NODE:
 	        case NUM_NODE:

@@ -106,6 +106,18 @@ public class Runtime {
         }
     }
 
+    public static LuaType unaryOp(LuaType value, int op) {
+        Double aNum = value.toDouble();
+
+        switch (op) {
+            case 1:
+                return new LuaNumber(-1 * aNum);
+            default:
+                // Should never be accessed
+                return luaNil;
+        }
+    }
+
     public static void print(LuaType value) {
         System.out.println(value);
     }

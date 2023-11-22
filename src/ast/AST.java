@@ -84,7 +84,8 @@ public class AST {
 			} else if (this.kind == NodeKind.VAR_DECL_NODE
 						|| this.kind == NodeKind.VAR_USE_NODE
 						|| this.kind == NodeKind.ARIT_OP_NODE
-						|| this.kind == NodeKind.RELAT_OP_NODE) {
+						|| this.kind == NodeKind.RELAT_OP_NODE
+						|| this.kind == NodeKind.UNARY_OP_NODE) {
 				System.err.printf(": %s", this.data);
 			} else {
 				System.err.printf("str: %s", this.data);

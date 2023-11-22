@@ -22,6 +22,7 @@ import static ast.NodeKind.PLUS_NODE;
 import static ast.NodeKind.RELAT_OP_NODE;
 import static ast.NodeKind.REPEAT_NODE;
 import static ast.NodeKind.TIMES_NODE;
+import static ast.NodeKind.UNARY_OP_NODE;
 import static ast.NodeKind.VAL_NODE;
 import static ast.NodeKind.VAR_DECL_NODE;
 import static ast.NodeKind.VAR_LIST_NODE;
@@ -51,6 +52,7 @@ import parser.LuaParser.NumberContext;
 import parser.LuaParser.OperatorUnaryContext;
 import parser.LuaParser.RepeatContext;
 import parser.LuaParser.StringContext;
+import parser.LuaParser.UnaryContext;
 import parser.LuaParser.VarContext;
 import parser.LuaParser.VarOrExpContext;
 import parser.LuaParser.VarlistContext;
@@ -381,6 +383,21 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         }
         node.addChild(visit(ctx.block()));
 		return node;
+    }
+
+    @Override
+    public AST visitUnary(UnaryContext ctx) {
+        double kind;
+        String op = ctx.operatorUnary().getText();
+        if (op.equals("-")) {
+            kind = 1;
+        } else {
+            kind = 0;
+            System.exit(1);
+        }
+        AST node = new AST(UNARY_OP_NODE, op, kind);
+        node.addChild(visit(ctx.exp()));
+        return node;
     }
 
     // @Override
