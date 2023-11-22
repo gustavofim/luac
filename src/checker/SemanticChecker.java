@@ -9,6 +9,7 @@ import static ast.NodeKind.EXP_LIST_NODE;
 import static ast.NodeKind.FUNC_DEF_NODE;
 import static ast.NodeKind.GE_NODE;
 import static ast.NodeKind.GT_NODE;
+import static ast.NodeKind.IF_NODE;
 import static ast.NodeKind.LE_NODE;
 import static ast.NodeKind.LT_NODE;
 import static ast.NodeKind.MINUS_NODE;
@@ -41,6 +42,7 @@ import parser.LuaParser.FuncnameContext;
 import parser.LuaParser.FunctionDefContext;
 import parser.LuaParser.FunctionDefExpContext;
 import parser.LuaParser.FunctioncallContext;
+import parser.LuaParser.IfThenElseContext;
 import parser.LuaParser.MultDivModContext;
 import parser.LuaParser.NamelistContext;
 import parser.LuaParser.NumberContext;
@@ -313,6 +315,25 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 		ctx.NAME().forEach((child) -> {
 			node.addChild(new AST(VAR_DECL_NODE, child.getSymbol().getText(), (double)child.getSymbol().getLine()));
 		});
+        return node;
+    }
+
+    @Override
+    public AST visitIfThenElse(IfThenElseContext ctx) {
+        AST node = AST.newSubtree(IF_NODE, visit(ctx.exp(0)));
+        AST tail = node;
+        node.addChild(visit(ctx.block(0)));
+        for (int i = 0; i < ctx.ELSEIF().size(); i++) {
+            AST elif = AST.newSubtree(IF_NODE, visit(ctx.exp(i + 1)));
+            elif.addChild(visit(ctx.block(i + 1)));
+            tail.addChild(elif);
+            tail = elif;
+        }
+        if (ctx.ELSE() != null) {
+            tail.addChild(visit(ctx.block(ctx.block().size() - 1)));
+        }
+        // System.err.println(ctx.ELSEIF());
+
         return node;
     }
 

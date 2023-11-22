@@ -192,4 +192,27 @@ public class Gen extends ASTBaseVisitor<Void> {
         return null;
     }
 
+    private int ifCount = 0;
+
+    @Override
+    protected Void visitIf(AST node) {
+        int count = ifCount;
+        ifCount++;
+        visit(node.getChild(0));
+        emit("invokeinterface luaruntime/LuaType/toBoolean()Z 1");
+        emit(String.format("ifeq if%d", count));
+        ident++;
+        visit(node.getChild(1));
+        emit(String.format("goto ifEnd%d", count));
+        ident--;
+        emit(String.format("if%d:", count));
+        if (node.getChildCount() > 2) {
+            ident++;
+            visit(node.getChild(2));
+            ident--;
+        }
+        emit(String.format("ifEnd%d:", count));
+        return null;
+    }
+
 }

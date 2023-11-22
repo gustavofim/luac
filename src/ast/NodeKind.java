@@ -14,7 +14,7 @@ public enum NodeKind {
     EQ_NODE,
     EXP_LIST_NODE,
     FUNC_DEF_NODE,
-    // IF_NODE,
+    IF_NODE,
     GE_NODE,
     GT_NODE,
     LE_NODE,
@@ -47,7 +47,7 @@ public enum NodeKind {
             case EQ_NODE:       return "==";
             case EXP_LIST_NODE: return "exp_list";
             case FUNC_DEF_NODE: return "def";
-            // case IF_NODE:       return "if";
+            case IF_NODE:       return "if";
             case GE_NODE:       return ">=";
             case GT_NODE:       return ">";
             case LE_NODE:       return "<=";
