@@ -8,7 +8,7 @@ public class Runtime {
     // private static HashMap<String, LuaType> v = new HashMap<String, LuaType>();
     private static Deque<HashMap<String, LuaType>> vars = new ArrayDeque<HashMap<String, LuaType>>();
 
-    private final static LuaNil luaNil = new LuaNil();
+    private final static LuaNil luaNil = LuaNil.getInstance();
 
     public static LuaType wrapConst(double number) {
         LuaNumber newNum = new LuaNumber(number);
