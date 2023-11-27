@@ -72,11 +72,25 @@ public class Gen extends ASTBaseVisitor<Void> {
         return null;
     }
 
+    private boolean isLocal = false;
+
+    @Override
+    protected Void visitLocal(AST node) {
+        isLocal = true;
+        visit(node.getChild(0));
+        isLocal = false;
+        return null;
+    }
+
     @Override
     protected Void visitAssign(AST node) {
         visit(node.getChild(0).getChild(0));
         visit(node.getChild(1).getChild(0));
-        emit("invokestatic luaruntime/Runtime/setGlobalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+        if (isLocal) {
+            emit("invokestatic luaruntime/Runtime/setLocalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+        } else {
+            emit("invokestatic luaruntime/Runtime/setGlobalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+        }
         return null;
     }
 

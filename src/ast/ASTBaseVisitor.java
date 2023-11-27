@@ -34,6 +34,7 @@ public abstract class ASTBaseVisitor<T> {
 	        // case BOOL_VAL_NODE: return visitBoolVal(node);
 	        case IF_NODE:       return visitIf(node);
 	        // case INT_VAL_NODE:  return visitIntVal(node);
+	        case LOCAL_NODE:  return visitLocal(node);
 	        case NUM_NODE:      return visitNum(node);
 	        // case PROGRAM_NODE:  return visitProgram(node);
 	        // case READ_NODE:     return visitRead(node);
@@ -75,6 +76,8 @@ public abstract class ASTBaseVisitor<T> {
 	// protected abstract T visitBoolVal(AST node);
 
 	protected abstract T visitIf(AST node);
+
+	protected abstract T visitLocal(AST node);
 
 	protected abstract T visitNum(AST node);
 

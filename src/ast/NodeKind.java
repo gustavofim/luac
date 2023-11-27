@@ -19,6 +19,7 @@ public enum NodeKind {
     GT_NODE,
     IF_NODE,
     LE_NODE,
+    LOCAL_NODE,
     LT_NODE,
     MINUS_NODE,
     MOD_NODE,
@@ -54,6 +55,7 @@ public enum NodeKind {
             case GT_NODE:       return ">";
             case IF_NODE:       return "if";
             case LE_NODE:       return "<=";
+            case LOCAL_NODE:       return "local";
             case LT_NODE:       return "<";
             case MINUS_NODE:    return "-";
             case MOD_NODE:    return "%";
