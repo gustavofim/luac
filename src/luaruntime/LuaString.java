@@ -20,4 +20,22 @@ public class LuaString implements LuaType {
     public boolean toBoolean() {
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        return String.format("str-%s", this.data).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof LuaNumber) {
+            LuaNumber oNumber = (LuaNumber)o;
+            return this.toDouble() == oNumber.toDouble();
+        }
+        if (!(o instanceof LuaString)) {
+            return false;
+        }
+        LuaString oString = (LuaString)o;
+        return this.data.equals(oString.data);
+    }
 }

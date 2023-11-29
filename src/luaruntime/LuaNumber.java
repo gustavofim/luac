@@ -27,4 +27,18 @@ public class LuaNumber implements LuaType {
     public boolean toBoolean() {
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        return String.format("num-%f", this.data).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof LuaNumber)) {
+            return false;
+        }
+        LuaNumber oNumber = (LuaNumber)o;
+        return this.data == oNumber.data;
+    }
 }

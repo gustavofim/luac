@@ -24,4 +24,18 @@ public class LuaBoolean implements LuaType {
             return "false";
         }
     }
+
+    @Override
+    public int hashCode() {
+        return String.format("bool-%b", this.data).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof LuaBoolean)) {
+            return false;
+        }
+        LuaBoolean oBoolean = (LuaBoolean)o;
+        return this.data == oBoolean.data;
+    }
 }

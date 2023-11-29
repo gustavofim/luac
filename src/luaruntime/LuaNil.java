@@ -25,4 +25,17 @@ public class LuaNil implements LuaType {
     public boolean toBoolean() {
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return "nil".hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof LuaNil)) {
+            return false;
+        }
+        return true;
+    }
 }
