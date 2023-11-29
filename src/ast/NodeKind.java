@@ -11,8 +11,10 @@ public enum NodeKind {
     ARIT_OP_NODE,
     ASSIGN_NODE,
     BLOCK_NODE,
+    BOOL_OP_NODE,
     EQ_NODE,
     EXP_LIST_NODE,
+    FALSE_NODE,
     FOR_NODE,
     FUNC_DEF_NODE,
     GE_NODE,
@@ -24,6 +26,7 @@ public enum NodeKind {
     MINUS_NODE,
     MOD_NODE,
     NEQ_NODE,
+    NIL_NODE,
     NUM_NODE,
     OVER_NODE,
     PLUS_NODE,
@@ -32,6 +35,7 @@ public enum NodeKind {
     REPEAT_NODE,
     // STAT_NODE,
     RELAT_OP_NODE,
+    TRUE_NODE,
     TIMES_NODE,
     UNARY_OP_NODE,
     VAL_NODE,
@@ -46,9 +50,11 @@ public enum NodeKind {
             case ARGS_NODE:   return "args";
             case ARIT_OP_NODE:   return "arit_op";
             case ASSIGN_NODE:   return "=";
+            case BOOL_OP_NODE:    return "bool_op";
             case BLOCK_NODE:    return "block";
             case EQ_NODE:       return "==";
             case EXP_LIST_NODE: return "exp_list";
+            case FALSE_NODE: return "FALSE";
             case FOR_NODE: return "for";
             case FUNC_DEF_NODE: return "def";
             case GE_NODE:       return ">=";
@@ -60,6 +66,7 @@ public enum NodeKind {
             case MINUS_NODE:    return "-";
             case MOD_NODE:    return "%";
             case NEQ_NODE:    return "~=";
+            case NIL_NODE:      return "NIL";
             case NUM_NODE:      return "";
             case OVER_NODE:     return "/";
             case PLUS_NODE:     return "+";
@@ -69,6 +76,7 @@ public enum NodeKind {
             // case STAT_NODE:     return "stat";
             case RELAT_OP_NODE:    return "relat_op";
             case TIMES_NODE:    return "*";
+            case TRUE_NODE:    return "TRUE";
             case UNARY_OP_NODE:    return "unary_op";
             case VAL_NODE:      return "";
             case VAR_DECL_NODE: return "var_decl";
@@ -88,6 +96,7 @@ public enum NodeKind {
 	        case ARIT_OP_NODE:
 	        case UNARY_OP_NODE:
 	        case RELAT_OP_NODE:
+	        case BOOL_OP_NODE:
 	        case VAL_NODE:
 	        case NUM_NODE:
 	        case VAR_DECL_NODE:

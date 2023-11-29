@@ -25,6 +25,17 @@ public class Runtime {
         return newFunc;
     }
 
+    public static LuaType nilConst() {
+        return luaNil;
+    }
+
+    public static LuaType trueConst() {
+        return new LuaBoolean(true);
+    }
+
+    public static LuaType falseConst() {
+        return new LuaBoolean(false);
+    }
     public static void setGlobalVar(String id, LuaType value) {
         vars.peekLast().put(id, value);
     }
@@ -107,11 +118,33 @@ public class Runtime {
     }
 
     public static LuaType unaryOp(LuaType value, int op) {
-        Double aNum = value.toDouble();
+        switch (op) {
+            case 1:
+                return new LuaNumber(-1 * value.toDouble());
+            case 2:
+                return new LuaBoolean(!value.toBoolean());
+            default:
+                // Should never be accessed
+                return luaNil;
+        }
+    }
+
+    public static LuaType boolOp(LuaType a, LuaType b, int op) {
+        boolean aBool = a.toBoolean();
 
         switch (op) {
             case 1:
-                return new LuaNumber(-1 * aNum);
+                if (!aBool) {
+                    return a;
+                } else {
+                    return b;
+                }
+            case 2:
+                if (aBool) {
+                    return a;
+                } else {
+                    return b;
+                }
             default:
                 // Should never be accessed
                 return luaNil;

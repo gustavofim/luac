@@ -127,6 +127,24 @@ public class Gen extends ASTBaseVisitor<Void> {
     }
 
     @Override
+    protected Void visitNil(AST node) {
+        emit("invokestatic luaruntime/Runtime/nilConst()Lluaruntime/LuaType;", true);
+        return null;
+    }
+
+    @Override
+    protected Void visitTrue(AST node) {
+        emit("invokestatic luaruntime/Runtime/trueConst()Lluaruntime/LuaType;", true);
+        return null;
+    }
+
+    @Override
+    protected Void visitFalse(AST node) {
+        emit("invokestatic luaruntime/Runtime/falseConst()Lluaruntime/LuaType;", true);
+        return null;
+    }
+
+    @Override
     protected Void visitVal(AST node) {
         emit(String.format("ldc \"%s\"", node.data));
         emit("invokestatic luaruntime/Runtime/wrapConst(Ljava/lang/String;)Lluaruntime/LuaType;", true);
@@ -148,6 +166,15 @@ public class Gen extends ASTBaseVisitor<Void> {
         visit(node.getChild(1));
         emit(String.format("ldc %.0f", node.numData));
         emit("invokestatic luaruntime/Runtime/relatOp(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
+        return null;
+    }
+
+    @Override
+    protected Void visitBoolOp(AST node) {
+        visit(node.getChild(0));
+        visit(node.getChild(1));
+        emit(String.format("ldc %.0f", node.numData));
+        emit("invokestatic luaruntime/Runtime/boolOp(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
         return null;
     }
 

@@ -4,8 +4,10 @@ import static ast.NodeKind.ARGS_NODE;
 import static ast.NodeKind.ARIT_OP_NODE;
 import static ast.NodeKind.ASSIGN_NODE;
 import static ast.NodeKind.BLOCK_NODE;
+import static ast.NodeKind.BOOL_OP_NODE;
 import static ast.NodeKind.EQ_NODE;
 import static ast.NodeKind.EXP_LIST_NODE;
+import static ast.NodeKind.FALSE_NODE;
 import static ast.NodeKind.FOR_NODE;
 import static ast.NodeKind.FUNC_DEF_NODE;
 import static ast.NodeKind.GE_NODE;
@@ -17,12 +19,14 @@ import static ast.NodeKind.LT_NODE;
 import static ast.NodeKind.MINUS_NODE;
 import static ast.NodeKind.MOD_NODE;
 import static ast.NodeKind.NEQ_NODE;
+import static ast.NodeKind.NIL_NODE;
 import static ast.NodeKind.NUM_NODE;
 import static ast.NodeKind.OVER_NODE;
 import static ast.NodeKind.PLUS_NODE;
 import static ast.NodeKind.RELAT_OP_NODE;
 import static ast.NodeKind.REPEAT_NODE;
 import static ast.NodeKind.TIMES_NODE;
+import static ast.NodeKind.TRUE_NODE;
 import static ast.NodeKind.UNARY_OP_NODE;
 import static ast.NodeKind.VAL_NODE;
 import static ast.NodeKind.VAR_DECL_NODE;
@@ -34,6 +38,7 @@ import ast.AST;
 import ast.NodeKind;
 import parser.LuaParserBaseVisitor;
 import parser.LuaParser.AddSubContext;
+import parser.LuaParser.AndContext;
 import parser.LuaParser.ArgListContext;
 import parser.LuaParser.AssignContext;
 import parser.LuaParser.AttnamelistContext;
@@ -41,6 +46,7 @@ import parser.LuaParser.BlockContext;
 import parser.LuaParser.ChunkContext;
 import parser.LuaParser.ComparisonContext;
 import parser.LuaParser.ExplistContext;
+import parser.LuaParser.FalseContext;
 import parser.LuaParser.ForContext;
 import parser.LuaParser.FuncbodyContext;
 import parser.LuaParser.FuncnameContext;
@@ -51,10 +57,13 @@ import parser.LuaParser.IfThenElseContext;
 import parser.LuaParser.LocalContext;
 import parser.LuaParser.MultDivModContext;
 import parser.LuaParser.NamelistContext;
+import parser.LuaParser.NilContext;
 import parser.LuaParser.NumberContext;
 import parser.LuaParser.OperatorUnaryContext;
+import parser.LuaParser.OrContext;
 import parser.LuaParser.RepeatContext;
 import parser.LuaParser.StringContext;
+import parser.LuaParser.TrueContext;
 import parser.LuaParser.UnaryContext;
 import parser.LuaParser.VarContext;
 import parser.LuaParser.VarOrExpContext;
@@ -170,6 +179,21 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     }
 
     @Override
+    public AST visitNil(NilContext ctx) {
+        return new AST(NIL_NODE, "", 0.0);
+    }
+
+    @Override
+    public AST visitTrue(TrueContext ctx) {
+        return new AST(TRUE_NODE, "", 0.0);
+    }
+
+    @Override
+    public AST visitFalse(FalseContext ctx) {
+        return new AST(FALSE_NODE, "", 0.0);
+    }
+
+    @Override
     public AST visitString(StringContext ctx) {
         String str = ctx.getChild(0).toString();
         str = str.substring(1, str.length()-1);
@@ -222,6 +246,24 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
             kind = 5;
         }
 		AST node = new AST(ARIT_OP_NODE, op, kind);
+		ctx.exp().forEach((child) -> {
+			node.addChild(visit(child));
+		});
+        return node;
+    }
+
+    @Override
+    public AST visitAnd(AndContext ctx) {
+		AST node = new AST(BOOL_OP_NODE, ctx.operatorAnd().getText(), (double)1);
+		ctx.exp().forEach((child) -> {
+			node.addChild(visit(child));
+		});
+        return node;
+    }
+
+    @Override
+    public AST visitOr(OrContext ctx) {
+		AST node = new AST(BOOL_OP_NODE, ctx.operatorOr().getText(), (double)2);
 		ctx.exp().forEach((child) -> {
 			node.addChild(visit(child));
 		});
@@ -351,6 +393,8 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         String op = ctx.operatorUnary().getText();
         if (op.equals("-")) {
             kind = 1;
+        } else if (op.equals("not")) {
+            kind = 2;
         } else {
             kind = 0;
             System.exit(1);

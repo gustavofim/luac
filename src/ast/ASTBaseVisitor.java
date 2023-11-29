@@ -27,7 +27,9 @@ public abstract class ASTBaseVisitor<T> {
 	        case ARGS_NODE:     return visitArgs(node);
 	        case ARIT_OP_NODE:   return visitAritOp(node);
 	        case ASSIGN_NODE:   return visitAssign(node);
+	        case BOOL_OP_NODE:    return visitBoolOp(node);
 	        case BLOCK_NODE:    return visitBlock(node);
+	        case FALSE_NODE:    return visitFalse(node);
 	        case FOR_NODE:    return visitFor(node);
 	        case FUNC_DEF_NODE:    return visitFuncDef(node);
 	        case EXP_LIST_NODE:    return visitExpList(node);
@@ -35,6 +37,7 @@ public abstract class ASTBaseVisitor<T> {
 	        case IF_NODE:       return visitIf(node);
 	        // case INT_VAL_NODE:  return visitIntVal(node);
 	        case LOCAL_NODE:  return visitLocal(node);
+	        case NIL_NODE:      return visitNil(node);
 	        case NUM_NODE:      return visitNum(node);
 	        // case PROGRAM_NODE:  return visitProgram(node);
 	        // case READ_NODE:     return visitRead(node);
@@ -42,6 +45,7 @@ public abstract class ASTBaseVisitor<T> {
 	        case REPEAT_NODE:   return visitRepeat(node);
 	        // case STR_VAL_NODE:  return visitStrVal(node);
 	        case RELAT_OP_NODE:    return visitRelatOp(node);
+	        case TRUE_NODE:    return visitTrue(node);
 	        case UNARY_OP_NODE:    return visitUnaryOp(node);
 	        case VAL_NODE: return visitVal(node);
 	        case VAR_DECL_NODE: return visitVarDecl(node);
@@ -65,7 +69,11 @@ public abstract class ASTBaseVisitor<T> {
 
 	protected abstract T visitAssign(AST node);
 
+	protected abstract T visitBoolOp(AST node);
+
 	protected abstract T visitBlock(AST node);
+
+	protected abstract T visitFalse(AST node);
 
 	protected abstract T visitFor(AST node);
 
@@ -79,6 +87,8 @@ public abstract class ASTBaseVisitor<T> {
 
 	protected abstract T visitLocal(AST node);
 
+	protected abstract T visitNil(AST node);
+	
 	protected abstract T visitNum(AST node);
 
 	// protected abstract T visitRead(AST node);
@@ -86,6 +96,8 @@ public abstract class ASTBaseVisitor<T> {
 	protected abstract T visitRepeat(AST node);
 
 	protected abstract T visitRelatOp(AST node);
+
+	protected abstract T visitTrue(AST node);
 
 	protected abstract T visitUnaryOp(AST node);
 
