@@ -25,6 +25,8 @@ import static ast.NodeKind.OVER_NODE;
 import static ast.NodeKind.PLUS_NODE;
 import static ast.NodeKind.RELAT_OP_NODE;
 import static ast.NodeKind.REPEAT_NODE;
+import static ast.NodeKind.TABLE_FIELD_NODE;
+import static ast.NodeKind.TABLE_NODE;
 import static ast.NodeKind.TIMES_NODE;
 import static ast.NodeKind.TRUE_NODE;
 import static ast.NodeKind.UNARY_OP_NODE;
@@ -47,6 +49,7 @@ import parser.LuaParser.ChunkContext;
 import parser.LuaParser.ComparisonContext;
 import parser.LuaParser.ExplistContext;
 import parser.LuaParser.FalseContext;
+import parser.LuaParser.FieldlistContext;
 import parser.LuaParser.ForContext;
 import parser.LuaParser.FuncbodyContext;
 import parser.LuaParser.FuncnameContext;
@@ -63,6 +66,11 @@ import parser.LuaParser.OperatorUnaryContext;
 import parser.LuaParser.OrContext;
 import parser.LuaParser.RepeatContext;
 import parser.LuaParser.StringContext;
+import parser.LuaParser.TableAssignContext;
+import parser.LuaParser.TableBracketContext;
+import parser.LuaParser.TableContext;
+import parser.LuaParser.TableExpContext;
+import parser.LuaParser.TableconstructorContext;
 import parser.LuaParser.TrueContext;
 import parser.LuaParser.UnaryContext;
 import parser.LuaParser.VarContext;
@@ -421,6 +429,58 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
             new AST(VAR_DECL_NODE,
                         ctx.NAME().get(0).getSymbol().getText(),
                         (double)ctx.NAME().get(0).getSymbol().getLine()));
+    }
+
+    @Override
+    public AST visitTable(TableContext ctx) {
+        // AST node = AST.newSubtree(TABLE_NODE);
+        // AST child = visit(ctx.tableconstructor());
+        // if (child != null) {
+        //     node.addChild(child);
+        // }
+        // return node;
+        return visit(ctx.tableconstructor());
+    }
+    
+    @Override
+    public AST visitTableconstructor(TableconstructorContext ctx) {
+        if (ctx.fieldlist() != null) {
+            return visit(ctx.fieldlist());
+        }
+        return null;
+    }
+    
+    @Override
+    public AST visitFieldlist(FieldlistContext ctx) {
+        AST node = AST.newSubtree(TABLE_NODE);
+        ctx.field().forEach((child) -> {
+            node.addChild(visit(child));
+        });
+        return node;
+        // return new AST(TABLE_NODE, "", 0.0);
+        // return visit(ctx.getChild(0));
+    }
+
+    @Override
+    public AST visitTableExp(TableExpContext ctx) {
+        return AST.newSubtree(TABLE_FIELD_NODE, visit(ctx.exp()));
+    }
+
+    @Override
+    public AST visitTableBracket(TableBracketContext ctx) {
+        AST node = AST.newSubtree(TABLE_FIELD_NODE);
+        ctx.exp().forEach((child) -> {
+            node.addChild(visit(child));
+        });
+        return node;
+    }
+
+    @Override
+    public AST visitTableAssign(TableAssignContext ctx) {
+        AST node = AST.newSubtree(TABLE_FIELD_NODE);
+        node.addChild(new AST(VAL_NODE, ctx.NAME().getSymbol().getText()));
+        node.addChild(visit(ctx.exp()));
+        return node;
     }
 
     // @Override

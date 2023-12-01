@@ -35,6 +35,8 @@ public enum NodeKind {
     REPEAT_NODE,
     // STAT_NODE,
     RELAT_OP_NODE,
+    TABLE_NODE,
+    TABLE_FIELD_NODE,
     TRUE_NODE,
     TIMES_NODE,
     UNARY_OP_NODE,
@@ -75,6 +77,8 @@ public enum NodeKind {
             case REPEAT_NODE:   return "repeat";
             // case STAT_NODE:     return "stat";
             case RELAT_OP_NODE:    return "relat_op";
+            case TABLE_NODE:    return "table";
+            case TABLE_FIELD_NODE:    return "table_field";
             case TIMES_NODE:    return "*";
             case TRUE_NODE:    return "TRUE";
             case UNARY_OP_NODE:    return "unary_op";

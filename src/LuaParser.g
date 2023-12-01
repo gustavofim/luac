@@ -135,7 +135,7 @@ fieldlist
     ;
 
 field
-    : LBRA exp RBRA ASSIGN exp | NAME ASSIGN exp | exp
+    : LBRA exp RBRA ASSIGN exp #tableBracket | NAME ASSIGN exp #tableAssign | exp #tableExp
     ;
 
 fieldsep

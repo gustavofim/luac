@@ -45,7 +45,7 @@ public class Main {
 		// System.out.println("PARSE SUCCESSFUL!");
 
 		checker.printAST();
-		Gen gen = new Gen();
-		gen.execute(checker.getAST());
+		// Gen gen = new Gen();
+		// gen.execute(checker.getAST());
 	}
 }
