@@ -1,4 +1,4 @@
-a = 3
+a = 1
 if a == 0 then
     print("hello")
 elseif a == 1 then

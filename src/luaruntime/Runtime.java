@@ -36,6 +36,29 @@ public class Runtime {
     public static LuaType falseConst() {
         return new LuaBoolean(false);
     }
+
+    public static LuaType tableConst() {
+        return new LuaTable();
+    }
+
+    public static LuaType constructTable(LuaType table, LuaType key, LuaType value) {
+        if (!(table instanceof LuaTable)) {
+            System.out.printf("RUNTIME ERROR: indexing non table");
+            System.exit(1);
+        }
+        ((LuaTable)table).put(key, value);
+        return table;
+    }
+
+    public static LuaType constructTable(LuaType table, LuaType value) {
+        if (!(table instanceof LuaTable)) {
+            System.out.printf("RUNTIME ERROR: indexing non table");
+            System.exit(1);
+        }
+        ((LuaTable)table).put(value);
+        return table;
+    }
+
     public static void setGlobalVar(String id, LuaType value) {
         vars.peekLast().put(id, value);
     }
@@ -123,6 +146,12 @@ public class Runtime {
                 return new LuaNumber(-1 * value.toDouble());
             case 2:
                 return new LuaBoolean(!value.toBoolean());
+            case 3:
+                if (!(value instanceof LuaTable)) {
+                    System.out.printf("RUNTIME ERROR: indexing non table");
+                    System.exit(1);
+                }
+                return new LuaNumber(((LuaTable)value).len());
             default:
                 // Should never be accessed
                 return luaNil;

@@ -9,12 +9,22 @@ public class LuaTable implements LuaType {
 
     private HashMap<LuaType, LuaType> data = new HashMap<LuaType, LuaType>();
 
+    private double idx = 0.0;
+
     public LuaType get(LuaType key) {
         return data.getOrDefault(key, LuaNil.getInstance());
     }
 
     public void put(LuaType key, LuaType value) {
         data.put(key, value);
+    }
+
+    public void put(LuaType value) {
+        data.put(new LuaNumber(++idx), value);
+    }
+
+    public double len() {
+        return idx;
     }
 
     @Override

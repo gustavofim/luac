@@ -45,8 +45,8 @@ public abstract class ASTBaseVisitor<T> {
 	        case REPEAT_NODE:   return visitRepeat(node);
 	        // case STR_VAL_NODE:  return visitStrVal(node);
 	        case RELAT_OP_NODE:    return visitRelatOp(node);
-	        case TABLE_NODE:    return null;//visitTrue(node);
-	        case TABLE_FIELD_NODE:    return null;//visitTrue(node);
+	        case TABLE_NODE:    return visitTable(node);
+	        case TABLE_FIELD_NODE:    return visitTableField(node);
 	        case TRUE_NODE:    return visitTrue(node);
 	        case UNARY_OP_NODE:    return visitUnaryOp(node);
 	        case VAL_NODE: return visitVal(node);
@@ -98,6 +98,10 @@ public abstract class ASTBaseVisitor<T> {
 	protected abstract T visitRepeat(AST node);
 
 	protected abstract T visitRelatOp(AST node);
+
+	protected abstract T visitTable(AST node);
+
+	protected abstract T visitTableField(AST node);
 
 	protected abstract T visitTrue(AST node);
 

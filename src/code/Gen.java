@@ -264,6 +264,31 @@ public class Gen extends ASTBaseVisitor<Void> {
         return null;
     }
 
+    @Override
+    protected Void visitTable(AST node) {
+        emit("invokestatic luaruntime/Runtime/tableConst()Lluaruntime/LuaType;", true);
+        for (int i = 0; i < node.getChildCount(); i++) {
+            visit(node.getChild(i));
+        }
+        return null;
+    }
+    
+    @Override
+    protected Void visitTableField(AST node) {
+        if (node.getChildCount() == 0) {
+            return null;
+        }
+        visit(node.getChild(0));
+        if (node.getChildCount() == 2) {
+            visit(node.getChild(0));
+            emit("invokestatic luaruntime/Runtime/constructTable(Lluaruntime/LuaType;Lluaruntime/LuaType;Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
+        } else {
+            emit("invokestatic luaruntime/Runtime/constructTable(Lluaruntime/LuaType;Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
+        }
+
+        return null;
+    }
+    
     // private int forCount = 0;
 
     @Override

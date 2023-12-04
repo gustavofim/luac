@@ -404,8 +404,8 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         } else if (op.equals("not")) {
             kind = 2;
         } else {
-            kind = 0;
-            System.exit(1);
+            kind = 3;
+            // System.exit(1);
         }
         AST node = new AST(UNARY_OP_NODE, op, kind);
         node.addChild(visit(ctx.exp()));
@@ -446,8 +446,10 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     public AST visitTableconstructor(TableconstructorContext ctx) {
         if (ctx.fieldlist() != null) {
             return visit(ctx.fieldlist());
+        } else {
+            return AST.newSubtree(TABLE_NODE);
         }
-        return null;
+        // return null;
     }
     
     @Override
