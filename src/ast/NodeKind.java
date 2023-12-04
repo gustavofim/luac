@@ -21,6 +21,7 @@ public enum NodeKind {
     GT_NODE,
     IF_NODE,
     INDEX_NODE,
+    LAST_INDEX_NODE,
     LE_NODE,
     LOCAL_NODE,
     LT_NODE,
@@ -64,6 +65,7 @@ public enum NodeKind {
             case GT_NODE:       return ">";
             case IF_NODE:       return "if";
             case INDEX_NODE:       return "index";
+            case LAST_INDEX_NODE:       return "last_index";
             case LE_NODE:       return "<=";
             case LOCAL_NODE:       return "local";
             case LT_NODE:       return "<";

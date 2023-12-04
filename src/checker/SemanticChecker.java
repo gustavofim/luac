@@ -14,6 +14,7 @@ import static ast.NodeKind.GE_NODE;
 import static ast.NodeKind.GT_NODE;
 import static ast.NodeKind.IF_NODE;
 import static ast.NodeKind.INDEX_NODE;
+import static ast.NodeKind.LAST_INDEX_NODE;
 import static ast.NodeKind.LE_NODE;
 import static ast.NodeKind.LOCAL_NODE;
 import static ast.NodeKind.LT_NODE;
@@ -158,8 +159,21 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 	@Override
 	public AST visitAssign(AssignContext ctx) {
 		AST node = AST.newSubtree(ASSIGN_NODE);
-        node.addChild(visit(ctx.varlist()));
-        node.addChild(visit(ctx.explist()));
+        // node.addChild(visit(ctx.varlist()));
+        // node.addChild(visit(ctx.explist()));
+        AST varlist = visit(ctx.varlist());
+        AST explist = visit(ctx.explist()); 
+        int count = varlist.getChild(0).getChildCount();
+        node.addChild(varlist);
+        if (count > 0) {
+            NodeKind kind = varlist.getChild(0).getChild(0).kind;
+            if (kind == INDEX_NODE || kind == LAST_INDEX_NODE) {
+                AST child = varlist.getChild(0).getChild(count-1).getChild(0);
+                node.addChild(AST.newSubtree(EXP_LIST_NODE, AST.newSubtree(TABLE_FIELD_NODE, child, explist.getChild(0))));
+            }
+        } else {
+            node.addChild(explist);
+        }
 		return node;
 	}
 
@@ -218,7 +232,18 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
             if (!idt.lookup(childNode.data)) {
                 idt.add(childNode.data, (int)Math.round(childNode.numData));
             }
-			node.addChild(new AST(VAR_DECL_NODE, childNode.data, childNode.numData));
+            int childCount = childNode.getChildCount();
+            if (childCount > 0) {
+                AST idx = new AST(VAR_USE_NODE, childNode.data, childNode.numData);
+                for (int i = 0; i < childCount - 1; i++) {
+                    idx.addChild(childNode.getChild(i));
+                }
+                AST lastIdx = childNode.getChild(childCount-1).getChild(0);
+                idx.addChild(AST.newSubtree(LAST_INDEX_NODE, new AST(lastIdx.kind, lastIdx.data, lastIdx.numData)));
+                node.addChild(idx);
+            } else {
+                node.addChild(new AST(VAR_DECL_NODE, childNode.data, childNode.numData));
+            }
 		});
 		return node;
     }

@@ -37,6 +37,7 @@ public abstract class ASTBaseVisitor<T> {
 	        case IF_NODE:       return visitIf(node);
 	        case INDEX_NODE:       return visitIndex(node);
 	        // case INT_VAL_NODE:  return visitIntVal(node);
+	        case LAST_INDEX_NODE:  return null;//visitLocal(node);
 	        case LOCAL_NODE:  return visitLocal(node);
 	        case NIL_NODE:      return visitNil(node);
 	        case NUM_NODE:      return visitNum(node);

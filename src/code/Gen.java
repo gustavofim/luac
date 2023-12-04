@@ -8,6 +8,7 @@ import ast.ASTBaseVisitor;
 public class Gen extends ASTBaseVisitor<Void> {
     private int ident = 0;
     private boolean isMain = true;
+    private boolean isAssign = true;
     private ArrayList<String> mainCode = new ArrayList<String>();
     private ArrayList<String> funcCode = new ArrayList<String>();
 
@@ -86,10 +87,12 @@ public class Gen extends ASTBaseVisitor<Void> {
     protected Void visitAssign(AST node) {
         visit(node.getChild(0).getChild(0));
         visit(node.getChild(1).getChild(0));
-        if (isLocal) {
-            emit("invokestatic luaruntime/Runtime/setLocalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
-        } else {
-            emit("invokestatic luaruntime/Runtime/setGlobalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+        if (node.getChild(0).getChild(0).getChildCount() == 0) {
+            if (isLocal) {
+                emit("invokestatic luaruntime/Runtime/setLocalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+            } else {
+                emit("invokestatic luaruntime/Runtime/setGlobalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+            }
         }
         return null;
     }
@@ -124,9 +127,12 @@ public class Gen extends ASTBaseVisitor<Void> {
 
     @Override
     protected Void visitVarDecl(AST node) {
-        if (node.getChildCount() == 0) {
+        // if (node.getChildCount() == 0) {
             emit(String.format("ldc \"%s\"", node.data), true);
-        }
+        // } else {
+        //     emit(String.format("ldc \"%s\"", node.data), true);
+        //     emit(String.format("ldc \"%s\"", node.data), true);
+        // }
         return null;
     }
 
