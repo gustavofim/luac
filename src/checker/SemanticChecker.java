@@ -13,6 +13,7 @@ import static ast.NodeKind.FUNC_DEF_NODE;
 import static ast.NodeKind.GE_NODE;
 import static ast.NodeKind.GT_NODE;
 import static ast.NodeKind.IF_NODE;
+import static ast.NodeKind.INDEX_NODE;
 import static ast.NodeKind.LE_NODE;
 import static ast.NodeKind.LOCAL_NODE;
 import static ast.NodeKind.LT_NODE;
@@ -75,6 +76,7 @@ import parser.LuaParser.TrueContext;
 import parser.LuaParser.UnaryContext;
 import parser.LuaParser.VarContext;
 import parser.LuaParser.VarOrExpContext;
+import parser.LuaParser.VarSuffixContext;
 import parser.LuaParser.VarlistContext;
 import parser.LuaParser.WhileContext;
 import table.IdentifierTable;
@@ -223,7 +225,11 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitVar(VarContext ctx) {
-        return new AST(VAR_USE_NODE, ctx.NAME().getSymbol().getText(), (double)ctx.NAME().getSymbol().getLine());
+        AST node = new AST(VAR_USE_NODE, ctx.NAME().getSymbol().getText(), (double)ctx.NAME().getSymbol().getLine());
+        ctx.varSuffix().forEach((child) -> {
+            node.addChild(visit(child));
+        });
+        return node;
     }
 
     @Override
@@ -482,6 +488,17 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         AST node = AST.newSubtree(TABLE_FIELD_NODE);
         node.addChild(new AST(VAL_NODE, ctx.NAME().getSymbol().getText()));
         node.addChild(visit(ctx.exp()));
+        return node;
+    }
+
+    @Override
+    public AST visitVarSuffix(VarSuffixContext ctx) {
+        AST node = AST.newSubtree(INDEX_NODE);
+        if (ctx.LBRA() != null) {
+            node.addChild(visit(ctx.exp()));
+        } else {
+            node.addChild(new AST(VAL_NODE, ctx.NAME().getSymbol().getText()));
+        }
         return node;
     }
 

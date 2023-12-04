@@ -101,13 +101,24 @@ public class Gen extends ASTBaseVisitor<Void> {
             emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
         } else {
             // Args
-            visit(node.getChild(0));
             if (node.data.equals("print")) {
+                visit(node.getChild(0));
                 emit("invokestatic luaruntime/Runtime/print(Lluaruntime/LuaType;)V", true);
             } else {
-                emit("pops");
+                emit(String.format("ldc \"%s\"", node.data));
+                emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
+                for (int i = 0; i < node.getChildCount(); i++) {
+                    visit(node.getChild(i));
+                }
             }
         }
+        return null;
+    }
+
+    @Override
+    protected Void visitIndex(AST node) {
+        visit(node.getChild(0));
+        emit("invokestatic luaruntime/Runtime/getFromTable(Lluaruntime/LuaType;Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
         return null;
     }
 
@@ -280,7 +291,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         }
         visit(node.getChild(0));
         if (node.getChildCount() == 2) {
-            visit(node.getChild(0));
+            visit(node.getChild(1));
             emit("invokestatic luaruntime/Runtime/constructTable(Lluaruntime/LuaType;Lluaruntime/LuaType;Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
         } else {
             emit("invokestatic luaruntime/Runtime/constructTable(Lluaruntime/LuaType;Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);

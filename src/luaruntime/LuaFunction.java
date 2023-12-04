@@ -27,7 +27,7 @@ public class LuaFunction implements LuaType {
 
     @Override
     public String toString() {
-        return String.format("function@%d#%d", this.id, this.nArgs);
+        return String.format("function@%d (n args: %d)", this.id, this.nArgs);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class Runtime {
 
     public static LuaType constructTable(LuaType table, LuaType key, LuaType value) {
         if (!(table instanceof LuaTable)) {
-            System.out.printf("RUNTIME ERROR: indexing non table");
+            System.out.printf("RUNTIME ERROR: indexing non table\n");
             System.exit(1);
         }
         ((LuaTable)table).put(key, value);
@@ -52,11 +52,19 @@ public class Runtime {
 
     public static LuaType constructTable(LuaType table, LuaType value) {
         if (!(table instanceof LuaTable)) {
-            System.out.printf("RUNTIME ERROR: indexing non table");
+            System.out.printf("RUNTIME ERROR: indexing non table\n");
             System.exit(1);
         }
         ((LuaTable)table).put(value);
         return table;
+    }
+
+    public static LuaType getFromTable(LuaType table, LuaType key) {
+        if (!(table instanceof LuaTable)) {
+            System.out.printf("RUNTIME ERROR: indexing non table\n");
+            System.exit(1);
+        }
+        return ((LuaTable)table).get(key);
     }
 
     public static void setGlobalVar(String id, LuaType value) {
@@ -80,12 +88,12 @@ public class Runtime {
 
     public static LuaType aritOp(LuaType a, LuaType b, int op) {
         if (a instanceof LuaNil) {
-            System.out.printf("RUNTIME ERROR: attempt to perform arithmetic on a nil value (var '%s')", a);
+            System.out.printf("RUNTIME ERROR: attempt to perform arithmetic on a nil value (var '%s')\n", a);
             System.exit(1);
         }
 
         if (b instanceof LuaNil) {
-            System.out.printf("RUNTIME ERROR: attempt to perform arithmetic on a nil value (var '%s')", b);
+            System.out.printf("RUNTIME ERROR: attempt to perform arithmetic on a nil value (var '%s')\n", b);
             System.exit(1);
         }
 
@@ -148,7 +156,7 @@ public class Runtime {
                 return new LuaBoolean(!value.toBoolean());
             case 3:
                 if (!(value instanceof LuaTable)) {
-                    System.out.printf("RUNTIME ERROR: indexing non table");
+                    System.out.printf("RUNTIME ERROR: attempt to get length of non table\n");
                     System.exit(1);
                 }
                 return new LuaNumber(((LuaTable)value).len());

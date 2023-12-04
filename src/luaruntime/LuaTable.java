@@ -39,7 +39,8 @@ public class LuaTable implements LuaType {
 
     @Override
     public String toString() {
-        return String.format("table@%d", this.id);
+        this.data.forEach((key, value) -> System.out.println(key + ": " + value));
+        return String.format("table@%d (len: %.0f)", this.id, this.idx);
     }
 
     @Override
