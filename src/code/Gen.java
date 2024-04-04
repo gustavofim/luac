@@ -281,12 +281,15 @@ public class Gen extends ASTBaseVisitor<Void> {
         return null;
     }
 
+    private boolean inTable = false;
     @Override
     protected Void visitTable(AST node) {
+        inTable = true;
         emit("invokestatic luaruntime/Runtime/tableConst()Lluaruntime/LuaType;", true);
         for (int i = 0; i < node.getChildCount(); i++) {
             visit(node.getChild(i));
         }
+        inTable = false;
         return null;
     }
     
@@ -299,10 +302,12 @@ public class Gen extends ASTBaseVisitor<Void> {
         if (node.getChildCount() == 2) {
             visit(node.getChild(1));
             emit("invokestatic luaruntime/Runtime/constructTable(Lluaruntime/LuaType;Lluaruntime/LuaType;Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
+            if (!inTable) {
+                emit("pop");
+            }
         } else {
             emit("invokestatic luaruntime/Runtime/constructTable(Lluaruntime/LuaType;Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
         }
-
         return null;
     }
     
