@@ -32,9 +32,12 @@ public enum NodeKind {
     NUM_NODE,
     OVER_NODE,
     PLUS_NODE,
+    PARAMS_NODE,
+    PARAM_NODE,
     // PROGRAM_NODE,
     // READ_NODE,
     REPEAT_NODE,
+    RETURN_NODE,
     // STAT_NODE,
     RELAT_OP_NODE,
     TABLE_NODE,
@@ -76,9 +79,12 @@ public enum NodeKind {
             case NUM_NODE:      return "";
             case OVER_NODE:     return "/";
             case PLUS_NODE:     return "+";
+            case PARAMS_NODE:     return "params";
+            case PARAM_NODE:     return "param";
             // case PROGRAM_NODE:  return "program";
             // case READ_NODE:     return "read";
             case REPEAT_NODE:   return "repeat";
+            case RETURN_NODE:   return "return";
             // case STAT_NODE:     return "stat";
             case RELAT_OP_NODE:    return "relat_op";
             case TABLE_NODE:    return "table";
@@ -109,6 +115,7 @@ public enum NodeKind {
 	        case NUM_NODE:
 	        case VAR_DECL_NODE:
 	        case VAR_USE_NODE:
+	        case PARAM_NODE:
 	            return true;
 	        default:
 	            return false;

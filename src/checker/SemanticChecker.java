@@ -25,8 +25,11 @@ import static ast.NodeKind.NIL_NODE;
 import static ast.NodeKind.NUM_NODE;
 import static ast.NodeKind.OVER_NODE;
 import static ast.NodeKind.PLUS_NODE;
+import static ast.NodeKind.PARAMS_NODE;
+import static ast.NodeKind.PARAM_NODE;
 import static ast.NodeKind.RELAT_OP_NODE;
 import static ast.NodeKind.REPEAT_NODE;
+import static ast.NodeKind.RETURN_NODE;
 import static ast.NodeKind.TABLE_FIELD_NODE;
 import static ast.NodeKind.TABLE_NODE;
 import static ast.NodeKind.TIMES_NODE;
@@ -59,6 +62,7 @@ import parser.LuaParser.FunctionDefContext;
 import parser.LuaParser.FunctionDefExpContext;
 import parser.LuaParser.FunctioncallContext;
 import parser.LuaParser.IfThenElseContext;
+import parser.LuaParser.LaststatContext;
 import parser.LuaParser.LocalContext;
 import parser.LuaParser.MultDivModContext;
 import parser.LuaParser.NamelistContext;
@@ -66,6 +70,7 @@ import parser.LuaParser.NilContext;
 import parser.LuaParser.NumberContext;
 import parser.LuaParser.OperatorUnaryContext;
 import parser.LuaParser.OrContext;
+import parser.LuaParser.PrefixContext;
 import parser.LuaParser.RepeatContext;
 import parser.LuaParser.StringContext;
 import parser.LuaParser.TableAssignContext;
@@ -149,10 +154,14 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 	public AST visitBlock(BlockContext ctx) {
 		AST node = AST.newSubtree(BLOCK_NODE);
 		ctx.stat().forEach((child) -> {
+
             AST temp = visit(child);
 			if (temp != null) node.addChild(temp);
             // node.addChild(visit(child));
 		});
+        if (ctx.laststat() != null) {
+            node.addChild(visit(ctx.laststat()));
+        }
 		return node;
 	}
 
@@ -385,25 +394,45 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     @Override
     public AST visitFuncname(FuncnameContext ctx) {
         AST node = AST.newSubtree(VAR_LIST_NODE);
-        node.addChild(new AST(VAR_USE_NODE, ctx.NAME().get(0).getSymbol().getText(), (double)ctx.NAME().get(0).getSymbol().getLine()));
+        AST child = new AST(VAR_DECL_NODE, ctx.NAME().get(0).getSymbol().getText(), (double)ctx.NAME().get(0).getSymbol().getLine());
+        if (!idt.lookup(child.data)) {
+            idt.add(child.data, (int)Math.round(child.numData));
+        }
+        node.addChild(child);
         return node;
     }
+
+    // private boolean isParams = false;
 
     @Override
     public AST visitFuncbody(FuncbodyContext ctx) {
         AST node = AST.newSubtree(FUNC_DEF_NODE);
-        node.addChild(visit(ctx.getChild(1)));
+        // node.addChild(visit(ctx.getChild(1)));
+        // isParams = true;
+        if (ctx.parlist() != null) {
+            node.addChild(visit(ctx.parlist()));
+        }
+        // isParams = false;
         node.addChild(visit(ctx.block()));
-        // node = AST.newSubtree(EXP_LIST_NODE, node);
+        node = AST.newSubtree(EXP_LIST_NODE, node);
         return node;
     }
 
     @Override
     public AST visitNamelist(NamelistContext ctx) {
-        AST node = AST.newSubtree(ARGS_NODE);
+        // Considering theres no FORs, implemented for parameters only
+        AST node = AST.newSubtree(PARAMS_NODE);
 		ctx.NAME().forEach((child) -> {
-			node.addChild(new AST(VAR_DECL_NODE, child.getSymbol().getText(), (double)child.getSymbol().getLine()));
+			node.addChild(new AST(PARAM_NODE, child.getSymbol().getText(), (double)child.getSymbol().getLine()));
 		});
+        return node;
+    }
+
+
+    @Override
+    public AST visitLaststat(LaststatContext ctx) {
+        AST node = AST.newSubtree(RETURN_NODE);
+        node.addChild(visit(ctx.getChild(1)));
         return node;
     }
 

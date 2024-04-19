@@ -40,6 +40,7 @@ run:
 	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/io/$(FILE).lua 2> tree.dot > out/$(FILE).j
 	@dot -Tpdf tree.dot -o tree.pdf
 	@java -jar jasmin.jar out/$(FILE).j > /dev/null
+	@java -jar jasmin.jar out/Func*.j > /dev/null
 	@java -cp "luaruntime.jar:." Program
 	@rm Program.class
 test:

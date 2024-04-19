@@ -83,6 +83,7 @@ public class AST {
 				System.err.printf("num: %f", this.numData);
 			} else if (this.kind == NodeKind.VAR_DECL_NODE
 						|| this.kind == NodeKind.VAR_USE_NODE
+						|| this.kind == NodeKind.PARAM_NODE
 						|| this.kind == NodeKind.ARIT_OP_NODE
 						|| this.kind == NodeKind.RELAT_OP_NODE
 						|| this.kind == NodeKind.BOOL_OP_NODE
@@ -95,6 +96,9 @@ public class AST {
 	    System.err.printf("\"];\n");
 
 	    for (int i = 0; i < this.children.size(); i++) {
+			if (this.children.get(i) == null) {
+				System.err.println("aaaaaaaa");
+			}
 	        int childNr = this.children.get(i).printNodeDot();
 	        System.err.printf("node%d -> node%d;\n", myNr, childNr);
 	    }

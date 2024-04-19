@@ -20,8 +20,8 @@ public class Runtime {
         return newStr;
     }
 
-    public static LuaType wrapConst(int i) {
-        LuaFunction newFunc = new LuaFunction(i);
+    public static LuaType wrapConst(int id, LuaFunctionLiteral func, int nPar) {
+        LuaFunction newFunc = new LuaFunction(id, func, nPar);
         return newFunc;
     }
 
@@ -83,6 +83,10 @@ public class Runtime {
             if (ret != null) return ret;
         }
 
+        return vars.peek().getOrDefault(id, luaNil);
+    }
+
+    public static LuaType getLocalVar(String id) {
         return vars.peek().getOrDefault(id, luaNil);
     }
 
@@ -186,6 +190,28 @@ public class Runtime {
                 // Should never be accessed
                 return luaNil;
         }
+    }
+
+    public static LuaType setParam(LuaType func, String param) {
+        ((LuaFunction)func).setParam(param);
+        return func;
+    }
+
+    public static LuaType setArg(LuaType func, LuaType arg, int id) {
+        String argName = ((LuaFunction)func).getParam(id);
+        if (argName != null) {
+            setLocalVar(argName, arg);
+        }
+        return func;
+    }
+
+    public static LuaType initArgs(LuaType func) {
+        ((LuaFunction)func).initArgs();
+        return func;
+    }
+
+    public static LuaType call(LuaType func) {
+        return ((LuaFunction)func).call();
     }
 
     public static void print(LuaType value) {

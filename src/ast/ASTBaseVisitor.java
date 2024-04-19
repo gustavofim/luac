@@ -41,10 +41,13 @@ public abstract class ASTBaseVisitor<T> {
 	        case LOCAL_NODE:  return visitLocal(node);
 	        case NIL_NODE:      return visitNil(node);
 	        case NUM_NODE:      return visitNum(node);
+	        case PARAMS_NODE:  return visitParams(node);
+	        case PARAM_NODE:  return visitParam(node);
 	        // case PROGRAM_NODE:  return visitProgram(node);
 	        // case READ_NODE:     return visitRead(node);
 	        // case REAL_VAL_NODE: return visitRealVal(node);
 	        case REPEAT_NODE:   return visitRepeat(node);
+	        case RETURN_NODE:   return visitReturn(node);
 	        // case STR_VAL_NODE:  return visitStrVal(node);
 	        case RELAT_OP_NODE:    return visitRelatOp(node);
 	        case TABLE_NODE:    return visitTable(node);
@@ -97,9 +100,13 @@ public abstract class ASTBaseVisitor<T> {
 	
 	protected abstract T visitNum(AST node);
 
-	// protected abstract T visitRead(AST node);
+	protected abstract T visitParams(AST node);
+
+	protected abstract T visitParam(AST node);
 
 	protected abstract T visitRepeat(AST node);
+
+	protected abstract T visitReturn(AST node);
 
 	protected abstract T visitRelatOp(AST node);
 
