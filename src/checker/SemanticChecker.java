@@ -65,12 +65,14 @@ import parser.LuaParser.IfThenElseContext;
 import parser.LuaParser.LaststatContext;
 import parser.LuaParser.LocalContext;
 import parser.LuaParser.MultDivModContext;
+import parser.LuaParser.NameAndArgsContext;
 import parser.LuaParser.NamelistContext;
 import parser.LuaParser.NilContext;
 import parser.LuaParser.NumberContext;
 import parser.LuaParser.OperatorUnaryContext;
 import parser.LuaParser.OrContext;
 import parser.LuaParser.PrefixContext;
+import parser.LuaParser.PrefixexpContext;
 import parser.LuaParser.RepeatContext;
 import parser.LuaParser.StringContext;
 import parser.LuaParser.TableAssignContext;
@@ -325,16 +327,41 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         	System.out.printf("SEMANTIC ERROR: attempt to call a nil value at line %.0f.\n", name.numData);
             System.exit(1);
         }
-        if (ctx.nameAndArgs().size() == 0) {
-            return name;
+        // if (ctx.nameAndArgs().size() == 0) {
+        //     System.out.println("hoooooeee");
+        //     return name;
+        // }
+        // AST args = new AST(ARGS_NODE, "");
+		// ctx.nameAndArgs().forEach((child) -> {
+        //     AST temp = visit(child);
+		// 	if (temp != null) args.addChild(temp);
+		// });
+        // name.addChild(args);
+        name.addChild(visit(ctx.nameAndArgs().get(0)));
+        return name;
+    }
+
+    @Override
+    public AST visitPrefixexp(PrefixexpContext ctx) {
+        AST name = visit(ctx.varOrExp());
+        if (ctx.nameAndArgs().size() > 0) {
+            if (!idt.lookup(name.data)) {
+                System.out.printf("SEMANTIC ERROR: attempt to call a nil value at line %.0f.\n", name.numData);
+                System.exit(1);
+            }
+            name.addChild(visit(ctx.nameAndArgs().get(0)));
         }
+        return name;
+    }
+
+    @Override
+    public AST visitNameAndArgs(NameAndArgsContext ctx) {
         AST args = new AST(ARGS_NODE, "");
-		ctx.nameAndArgs().forEach((child) -> {
+		ctx.children.forEach((child) -> {
             AST temp = visit(child);
 			if (temp != null) args.addChild(temp);
 		});
-        name.addChild(args);
-        return name;
+        return args;
     }
 
     @Override

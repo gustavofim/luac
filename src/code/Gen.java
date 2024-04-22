@@ -39,7 +39,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         funcCode.forEach((key, value) -> {
             try (FileWriter fileWriter = new FileWriter(String.format("./out/%s.j", key))) {
                 PrintWriter printWriter = new PrintWriter(fileWriter);
-                printWriter.println(".class public Func0");
+                printWriter.println(String.format(".class public %s", key));
                 printWriter.println(".super java/lang/Object");
                 printWriter.println(".implements luaruntime/LuaFunctionLiteral\n");
                 printWriter.println(".method public <init>()V");
@@ -129,12 +129,13 @@ public class Gen extends ASTBaseVisitor<Void> {
 
     @Override
     protected Void visitVarUse(AST node) {
-        if (node.getChildCount() == 0) {
+        int count = node.getChildCount();
+        if (count == 0) {
             // No args -> evaluate var
             emit(String.format("ldc \"%s\"", node.data));
             emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
         } else {
-            if (node.getChild(0).kind == ARGS_NODE) {
+            if (node.getChild(count - 1).kind == ARGS_NODE) {
                 // Args -> function call
                 if (node.data.equals("print")) {
                     // Maybe this should be a literal wrapped by a LuaFunction at the start
