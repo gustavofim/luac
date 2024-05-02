@@ -1,8 +1,6 @@
-a = function(text, pext)
-    print(text)
-    print(pext)
+a = 20
+do
+    local a = 0
+    print(a)
 end
-
-b = 'hey'
-a(b)
-
+print(a)

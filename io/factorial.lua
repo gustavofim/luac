@@ -6,7 +6,11 @@
         return n * fact(n-1)
       end
     end
+
+    b = function(t)
+      print(t)
+      return
+    end
     
-    print("enter a number:")
-    a = io.read("*number")        --[[ `read` ([a]) "number" ]]
-    print(fact(a)) --comment then EOF
+    b(fact(5))
+    -- print(fact(a)) --comment then EOF

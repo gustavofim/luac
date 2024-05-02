@@ -426,6 +426,11 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
             idt.add(child.data, (int)Math.round(child.numData));
         }
         node.addChild(child);
+        if (ctx.NAME().size() > 1) {
+            AST use = new AST(VAR_USE_NODE, ctx.NAME().get(1).getSymbol().getText(), (double)ctx.NAME().get(1).getSymbol().getLine());
+            AST idx = AST.newSubtree(LAST_INDEX_NODE, use);
+            child.addChild(idx);
+        }
         return node;
     }
 
@@ -459,7 +464,9 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     @Override
     public AST visitLaststat(LaststatContext ctx) {
         AST node = AST.newSubtree(RETURN_NODE);
-        node.addChild(visit(ctx.getChild(1)));
+        if (ctx.children.size() > 1) {
+            node.addChild(visit(ctx.getChild(1)));
+        }
         return node;
     }
 

@@ -1,22 +1,10 @@
-obj = {}
-
--- obj.method = function()
---     print("A method...")
---     return "...just returned..."
--- end
-
-obj.method2 = function()
-    print("...another method...")
+a = function(b)
+    if b == 0 then
+        print("base")
+        return
+    end
+    print(b)
+    return a(b-1)
 end
 
--- function func(a)
---     print(a)
--- end
-
--- obj.method3 = func
-
-
--- print(obj.method())
-obj.method2()
--- obj.method3("...and the last.")
-
+print(a(2))

@@ -386,6 +386,7 @@ public class Gen extends ASTBaseVisitor<Void> {
             emit("invokestatic luaruntime/Runtime/nilConst()Lluaruntime/LuaType;");
             emit("areturn");
         }
+        returned = false;
         isMain = true;
 
         emit(String.format("ldc %d", funcCount));
@@ -410,7 +411,11 @@ public class Gen extends ASTBaseVisitor<Void> {
     @Override
     protected Void visitReturn(AST node) {
         returned = true;
-        visit(node.getChild(0));
+        if (node.getChildCount() > 0) {
+            visit(node.getChild(0));
+        } else {
+            emit("invokestatic luaruntime/Runtime/nilConst()Lluaruntime/LuaType;", true);
+        }
         emit("areturn");
         return null;
     }
