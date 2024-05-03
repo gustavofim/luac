@@ -30,25 +30,18 @@ public abstract class ASTBaseVisitor<T> {
 	        case BOOL_OP_NODE:    return visitBoolOp(node);
 	        case BLOCK_NODE:    return visitBlock(node);
 	        case FALSE_NODE:    return visitFalse(node);
-	        case FOR_NODE:    return visitFor(node);
 	        case FUNC_DEF_NODE:    return visitFuncDef(node);
 	        case EXP_LIST_NODE:    return visitExpList(node);
-	        // case BOOL_VAL_NODE: return visitBoolVal(node);
 	        case IF_NODE:       return visitIf(node);
 	        case INDEX_NODE:       return visitIndex(node);
-	        // case INT_VAL_NODE:  return visitIntVal(node);
 	        case LAST_INDEX_NODE:  return null;//visitLocal(node);
 	        case LOCAL_NODE:  return visitLocal(node);
 	        case NIL_NODE:      return visitNil(node);
 	        case NUM_NODE:      return visitNum(node);
 	        case PARAMS_NODE:  return visitParams(node);
 	        case PARAM_NODE:  return visitParam(node);
-	        // case PROGRAM_NODE:  return visitProgram(node);
-	        // case READ_NODE:     return visitRead(node);
-	        // case REAL_VAL_NODE: return visitRealVal(node);
 	        case REPEAT_NODE:   return visitRepeat(node);
 	        case RETURN_NODE:   return visitReturn(node);
-	        // case STR_VAL_NODE:  return visitStrVal(node);
 	        case RELAT_OP_NODE:    return visitRelatOp(node);
 	        case TABLE_NODE:    return visitTable(node);
 	        case TABLE_FIELD_NODE:    return visitTableField(node);
@@ -56,9 +49,7 @@ public abstract class ASTBaseVisitor<T> {
 	        case UNARY_OP_NODE:    return visitUnaryOp(node);
 	        case VAL_NODE: return visitVal(node);
 	        case VAR_DECL_NODE: return visitVarDecl(node);
-	        // case VAR_LIST_NODE: return visitVarList(node);
 	        case VAR_USE_NODE:  return visitVarUse(node);
-	        // case WRITE_NODE:    return visitWrite(node);
 	        case WHILE_NODE:    return visitWhile(node);
 	
 	        default:
@@ -82,13 +73,9 @@ public abstract class ASTBaseVisitor<T> {
 
 	protected abstract T visitFalse(AST node);
 
-	protected abstract T visitFor(AST node);
-
 	protected abstract T visitFuncDef(AST node);
 
 	protected abstract T visitExpList(AST node);
-
-	// protected abstract T visitBoolVal(AST node);
 
 	protected abstract T visitIf(AST node);
 
@@ -121,8 +108,6 @@ public abstract class ASTBaseVisitor<T> {
 	protected abstract T visitVal(AST node);
 
 	protected abstract T visitVarDecl(AST node);
-
-	// protected abstract T visitVarList(AST node);
 
 	protected abstract T visitVarUse(AST node);
 

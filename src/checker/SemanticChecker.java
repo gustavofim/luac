@@ -120,6 +120,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     public SemanticChecker() {
         idt.add("print", 0);
+        // idt.add("pront", 0);
         idt.add("read", 0);
     }
 

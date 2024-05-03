@@ -8,6 +8,6 @@ z = not 2
 x = x + y * 2
 y = x - y / 2
 
-print("x:", x)
-print("y is:", y)
+print(x)
+print(y)
 print(z)

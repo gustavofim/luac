@@ -3,6 +3,7 @@ package luaruntime;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Runtime {
     // private static HashMap<String, LuaType> v = new HashMap<String, LuaType>();
@@ -216,6 +217,13 @@ public class Runtime {
 
     public static void print(LuaType value) {
         System.out.println(value);
+    }
+
+    public static LuaType read() {
+        Scanner scan = new Scanner(System.in);
+        String s = scan.nextLine();
+        scan.close();
+        return wrapConst(s);
     }
 
     public static void startScope() {

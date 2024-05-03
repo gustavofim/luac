@@ -34,15 +34,21 @@ javac:
 	$(JAVAC) $(CLASS_PATH_OPTION) -d $(BIN_PATH) */*.java Main.java
 # Executa o front-end. Comando: $ make run FILE=arquivo_de_teste
 # 'Main' é a classe com a função principal
+# @java -jar jasmin.jar out/$(FILE).j > /dev/null
+# @java -jar jasmin.jar out/Func*.j > /dev/null
 run: 
+	@rm -f out/*
+	@rm -f ./*.class
 	@echo "Running: $(FILE).lua"
 	@mkdir -p out/
 	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/io/$(FILE).lua 2> tree.dot > out/$(FILE).j
 	@dot -Tpdf tree.dot -o tree.pdf
-	@java -jar jasmin.jar out/$(FILE).j > /dev/null
-	@if [ -e 'out/Func*.j' ]; then java -jar jasmin.jar out/Func*.j > /dev/null; fi
+	@java -jar jasmin.jar out/*.j > /dev/null
+	@java -jar jasmin.jar lualib/*.j > /dev/null
+	@echo "# Output"
 	@java -cp "luaruntime.jar:." Program
-	@rm Program.class
+	@echo "\n# Lua Output"
+	@lua $(ROOT)/io/$(FILE).lua
 test:
 	@echo "Running $(FILE):"
 	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/lua-5.4.6-tests/$(FILE)
