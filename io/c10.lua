@@ -7,5 +7,4 @@ a = function(b)
     return a(b-1)
 end
 
-a = print()
-print(a)
+print(a(2))

@@ -1,8 +1,5 @@
--- a = function()
---     print(10)
--- end
+print("hey")
 
--- print(a())
+a = print("hey")
 
-a = not 1
-print(a)
+print(print("hey"))

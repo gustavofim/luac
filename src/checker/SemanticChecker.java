@@ -328,16 +328,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         	System.out.printf("SEMANTIC ERROR: attempt to call a nil value at line %.0f.\n", name.numData);
             System.exit(1);
         }
-        // if (ctx.nameAndArgs().size() == 0) {
-        //     System.out.println("hoooooeee");
-        //     return name;
-        // }
-        // AST args = new AST(ARGS_NODE, "");
-		// ctx.nameAndArgs().forEach((child) -> {
-        //     AST temp = visit(child);
-		// 	if (temp != null) args.addChild(temp);
-		// });
-        // name.addChild(args);
         name.addChild(visit(ctx.nameAndArgs().get(0)));
         return name;
     }
@@ -435,17 +425,12 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         return node;
     }
 
-    // private boolean isParams = false;
-
     @Override
     public AST visitFuncbody(FuncbodyContext ctx) {
         AST node = AST.newSubtree(FUNC_DEF_NODE);
-        // node.addChild(visit(ctx.getChild(1)));
-        // isParams = true;
         if (ctx.parlist() != null) {
             node.addChild(visit(ctx.parlist()));
         }
-        // isParams = false;
         node.addChild(visit(ctx.block()));
         node = AST.newSubtree(EXP_LIST_NODE, node);
         return node;
@@ -485,7 +470,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         if (ctx.ELSE() != null) {
             tail.addChild(visit(ctx.block(ctx.block().size() - 1)));
         }
-        // System.err.println(ctx.ELSEIF());
 
         return node;
     }
@@ -513,7 +497,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         node.addChild(visit(ctx.attnamelist()));
         node.addChild(visit(ctx.explist()));
     
-        // node.addChild(new AST(VAR_USE_NODE, ctx.NAME().get(0).getSymbol().getText(), (double)ctx.NAME().get(0).getSymbol().getLine()));
         return AST.newSubtree(LOCAL_NODE, node);
     }
 
@@ -528,12 +511,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitTable(TableContext ctx) {
-        // AST node = AST.newSubtree(TABLE_NODE);
-        // AST child = visit(ctx.tableconstructor());
-        // if (child != null) {
-        //     node.addChild(child);
-        // }
-        // return node;
         return visit(ctx.tableconstructor());
     }
     
@@ -544,7 +521,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         } else {
             return AST.newSubtree(TABLE_NODE);
         }
-        // return null;
     }
     
     @Override
@@ -554,8 +530,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
             node.addChild(visit(child));
         });
         return node;
-        // return new AST(TABLE_NODE, "", 0.0);
-        // return visit(ctx.getChild(0));
     }
 
     @Override
@@ -595,50 +569,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     // public AST visitFunctionDefExp(FunctionDefExpContext ctx) {
     //     return visit(ctx.getChild(0));
     // }
-
-    // @Override
-    // public AST visitFor(ForContext ctx) {
-	// 	AST node = AST.newSubtree(FOR_NODE);
-	// 	AST assign = AST.newSubtree(ASSIGN_NODE);
-    //     assign.addChild(AST.newSubtree(VAR_LIST_NODE,
-    //                                  new AST(VAR_DECL_NODE,
-    //                                          ctx.NAME().getSymbol().getText(),
-    //                                          (double)ctx.NAME().getSymbol()
-    //                                          .getLine())));
-    //     assign.addChild(AST.newSubtree(EXP_LIST_NODE, visit(ctx.exp(0))));
-    //     node.addChild(assign);
-
-    //     AST ctrlVar = AST.newSubtree(
-    //         VAR_LIST_NODE,
-    //         new AST(VAR_USE_NODE,
-    //                 ctx.NAME().getSymbol().getText(),
-    //                 (double)ctx.NAME().getSymbol().getLine())
-    //     );
-
-    //     AST ctrlVal = AST.newSubtree(
-    //         EXP_LIST_NODE,
-    //         visit(ctx.exp(1))
-    //     );
-
-    //     if (ctx.exp().size() > 2) {
-    //         AST step = visit(ctx.exp(2));
-    //         if (step.numData > 0) {
-    //             node.addChild(AST.newSubtree(LE_NODE, ctrlVar, ctrlVal));
-    //         } else if (step.numData < 0) {
-    //             node.addChild(AST.newSubtree(GE_NODE, ctrlVar, ctrlVal));
-    //         } else {
-    //             System.out.printf("SEMANTIC ERROR: 'for' step is zero at line %d.\n", ctx.FOR().getSymbol().getLine());
-    //             System.exit(1);
-    //         }
-    //         node.addChild(step);
-    //     } else {
-    //         node.addChild(AST.newSubtree(LE_NODE, ctrlVar, ctrlVal));
-    //         node.addChild(new AST(NUM_NODE, "", (double)1));
-    //     }
-    //     node.addChild(visit(ctx.block()));
-	// 	return node;
-    // }
-
 
     // ----------------------------------------------------------------------------
 

@@ -21,8 +21,8 @@ public class Runtime {
         return newStr;
     }
 
-    public static LuaType wrapConst(int id, LuaFunctionLiteral func, int nPar) {
-        LuaFunction newFunc = new LuaFunction(id, func, nPar);
+    public static LuaType wrapConst(int id, LuaFunctionLiteral func) {
+        LuaFunction newFunc = new LuaFunction(id, func);
         return newFunc;
     }
 
@@ -69,6 +69,10 @@ public class Runtime {
     }
 
     public static void setGlobalVar(String id, LuaType value) {
+        // System.out.println("==========================================");
+        // System.out.println(id);
+        // System.out.println(value.toString());
+        // System.out.println("==========================================");
         vars.peekLast().put(id, value);
     }
 
@@ -199,15 +203,7 @@ public class Runtime {
     }
 
     public static LuaType setArg(LuaType func, LuaType arg, int id) {
-        String argName = ((LuaFunction)func).getParam(id);
-        if (argName != null) {
-            setLocalVar(argName, arg);
-        }
-        return func;
-    }
-
-    public static LuaType initArgs(LuaType func) {
-        ((LuaFunction)func).initArgs();
+        ((LuaFunction)func).setArg(id, arg);
         return func;
     }
 

@@ -6,11 +6,5 @@
         return n * fact(n-1)
       end
     end
-
-    b = function(t)
-      print(t)
-      return
-    end
-    
-    b(fact(5))
+    print(fact(10))
     -- print(fact(a)) --comment then EOF

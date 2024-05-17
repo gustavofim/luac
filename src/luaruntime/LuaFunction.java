@@ -5,35 +5,38 @@ import java.util.ArrayList;
 public class LuaFunction implements LuaType {
     private int id;
     private LuaFunctionLiteral func;
-    private int nPar;
+    private int numPar = 0;
+    private int numArgs = 0;
     private ArrayList<String> params = new ArrayList<>();
 
-    public LuaFunction(int id, LuaFunctionLiteral func, int nPar) {
+    public LuaFunction(int id, LuaFunctionLiteral func) {
         this.id = id;
         this.func = func;
-        this.nPar = nPar;
     }
 
     public void setParam(String param) {
+        ++numPar;
         params.add(param);
     }
 
-    public String getParam(int id) {
-        if (params.isEmpty() || params.size() < id + 1) {
-            return null;
+    public void setArg(int n, LuaType arg) {
+        if (params.isEmpty() || params.size() < n + 1) {
+            return;
         }
-        return params.get(id);
+        String argName = params.get(n);
+        Runtime.setLocalVar(argName, arg);
+        ++numArgs;
     }
 
-    public void initArgs() {
-        for (String par : params) {
-            if (!Runtime.getLocalVar(par).toBoolean()) {
-                Runtime.setLocalVar(par, Runtime.nilConst());
-            }
+    public void setNilArgs() {
+        for (int i = numArgs; i < numPar; ++i) {
+            Runtime.setLocalVar(params.get(i), Runtime.nilConst());
         }
     }
 
     public LuaType call() {
+        setNilArgs();
+        numArgs = 0;
         return func.call();
     }
 
@@ -50,10 +53,10 @@ public class LuaFunction implements LuaType {
     @Override
     public String toString() {
         if (this.params == null) {
-            return String.format("Func%d (n par: %d)", this.id, this.nPar);
+            return String.format("Func%d (n par: %d)", this.id, this.numPar);
         }
         return String.format("Func%d (n par: %d)\n\tParams: %s",
-                             this.id, this.nPar, this.params.toString());
+                             this.id, this.numPar, this.params.toString());
     }
 
     @Override

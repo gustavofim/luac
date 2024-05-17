@@ -8,3 +8,5 @@ c = 1
 a(5)
 a(c)
 a(b, c, d)
+
+print(a)

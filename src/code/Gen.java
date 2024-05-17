@@ -30,13 +30,13 @@ public class Gen extends ASTBaseVisitor<Void> {
         emit("invokestatic luaruntime/Runtime/startScope()V", true);
 
         // print and read functions where defined in lualib (Func0 and Func1)
+        emit("; Hardcoded lualib functions ====================================================", true);
         emit("ldc \"print\"");
         emit("ldc 0");
         emit("new Func0");
         emit("dup");
         emit("invokespecial Func0/<init>()V");
-        emit("ldc 1");
-        emit("invokestatic luaruntime/Runtime/wrapConst(ILluaruntime/LuaFunctionLiteral;I)Lluaruntime/LuaType;", true);
+        emit("invokestatic luaruntime/Runtime/wrapConst(ILluaruntime/LuaFunctionLiteral;)Lluaruntime/LuaType;", true);
         emit("ldc \"x\"");
         emit("invokestatic luaruntime/Runtime/setParam(Lluaruntime/LuaType;Ljava/lang/String;)Lluaruntime/LuaType;", true);
         emit("invokestatic luaruntime/Runtime/setGlobalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
@@ -46,9 +46,10 @@ public class Gen extends ASTBaseVisitor<Void> {
         emit("new Func1");
         emit("dup");
         emit("invokespecial Func1/<init>()V");
-        emit("ldc 0");
-        emit("invokestatic luaruntime/Runtime/wrapConst(ILluaruntime/LuaFunctionLiteral;I)Lluaruntime/LuaType;", true);
+        emit("invokestatic luaruntime/Runtime/wrapConst(ILluaruntime/LuaFunctionLiteral;)Lluaruntime/LuaType;", true);
         emit("invokestatic luaruntime/Runtime/setGlobalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+
+        emit("; ===============================================================================", true);
 
         visit(root);
         emit("invokestatic luaruntime/Runtime/endScope()V", true);
@@ -164,10 +165,9 @@ public class Gen extends ASTBaseVisitor<Void> {
                 emit(String.format("ldc \"%s\"", node.data));
                 emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
                 visit(node.getChild(0));
-                emit("invokestatic luaruntime/Runtime/initArgs(Lluaruntime/LuaType;)Lluaruntime/LuaType;");
                 emit("invokestatic luaruntime/Runtime/call(Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
                 emit("invokestatic luaruntime/Runtime/endScope()V", true);
-                if (!isAssign) emit("pop", true);
+                // if (!isAssign) emit("pop", true);
             } else {
                 emit(String.format("ldc \"%s\"", node.data));
                 emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
@@ -386,10 +386,9 @@ public class Gen extends ASTBaseVisitor<Void> {
 
     @Override
     protected Void visitFuncDef(AST node) {
-        int nPar = 0;
         int blockIdx = 0;
         if (node.getChildCount() > 1) {
-            nPar = node.getChild(0).getChildCount();
+            // nPar = node.getChild(0).getChildCount();
             blockIdx = 1;
         }
 
@@ -404,13 +403,10 @@ public class Gen extends ASTBaseVisitor<Void> {
         isMain = true;
 
         emit(String.format("ldc %d", funcCount));
-        // emit("new Func0");
         emit(String.format("new Func%d", funcCount));
         emit("dup");
-        // emit("invokespecial Func0/<init>()V");
         emit(String.format("invokespecial Func%d/<init>()V", funcCount));
-        emit(String.format("ldc %d", nPar));
-        emit("invokestatic luaruntime/Runtime/wrapConst(ILluaruntime/LuaFunctionLiteral;I)Lluaruntime/LuaType;", true);
+        emit("invokestatic luaruntime/Runtime/wrapConst(ILluaruntime/LuaFunctionLiteral;)Lluaruntime/LuaType;", true);
 
         if (node.getChildCount() > 1) {
             visit(node.getChild(0));
