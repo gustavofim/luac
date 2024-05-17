@@ -167,7 +167,6 @@ public class Gen extends ASTBaseVisitor<Void> {
                 visit(node.getChild(0));
                 emit("invokestatic luaruntime/Runtime/call(Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
                 emit("invokestatic luaruntime/Runtime/endScope()V", true);
-                // if (!isAssign) emit("pop", true);
             } else {
                 emit(String.format("ldc \"%s\"", node.data));
                 emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
@@ -427,6 +426,15 @@ public class Gen extends ASTBaseVisitor<Void> {
             emit("invokestatic luaruntime/Runtime/nilConst()Lluaruntime/LuaType;", true);
         }
         emit("areturn");
+        return null;
+    }
+
+    @Override
+    protected Void visitFuncStat(AST node) {
+        // If the whole statement is just a function call,
+        // pop the returned value to avoid stack height inconsistences
+        visit(node.getChild(0));
+        emit("pop", true);
         return null;
     }
 

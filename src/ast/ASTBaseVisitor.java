@@ -31,6 +31,7 @@ public abstract class ASTBaseVisitor<T> {
 	        case BLOCK_NODE:    return visitBlock(node);
 	        case FALSE_NODE:    return visitFalse(node);
 	        case FUNC_DEF_NODE:    return visitFuncDef(node);
+	        case FUNC_STAT_NODE:    return visitFuncStat(node);
 	        case EXP_LIST_NODE:    return visitExpList(node);
 	        case IF_NODE:       return visitIf(node);
 	        case INDEX_NODE:       return visitIndex(node);
@@ -74,6 +75,8 @@ public abstract class ASTBaseVisitor<T> {
 	protected abstract T visitFalse(AST node);
 
 	protected abstract T visitFuncDef(AST node);
+
+	protected abstract T visitFuncStat(AST node);
 
 	protected abstract T visitExpList(AST node);
 

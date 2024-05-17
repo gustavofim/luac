@@ -17,6 +17,7 @@ public enum NodeKind {
     FALSE_NODE,
     FOR_NODE,
     FUNC_DEF_NODE,
+    FUNC_STAT_NODE,
     GE_NODE,
     GT_NODE,
     IF_NODE,
@@ -34,11 +35,8 @@ public enum NodeKind {
     PLUS_NODE,
     PARAMS_NODE,
     PARAM_NODE,
-    // PROGRAM_NODE,
-    // READ_NODE,
     REPEAT_NODE,
     RETURN_NODE,
-    // STAT_NODE,
     RELAT_OP_NODE,
     TABLE_NODE,
     TABLE_FIELD_NODE,
@@ -49,7 +47,6 @@ public enum NodeKind {
     VAR_DECL_NODE,
     VAR_LIST_NODE,
     VAR_USE_NODE,
-    // WRITE_NODE;
     WHILE_NODE;
 
 	public String toString() {
@@ -64,6 +61,7 @@ public enum NodeKind {
             case FALSE_NODE: return "FALSE";
             case FOR_NODE: return "for";
             case FUNC_DEF_NODE: return "def";
+            case FUNC_STAT_NODE: return "func_stat";
             case GE_NODE:       return ">=";
             case GT_NODE:       return ">";
             case IF_NODE:       return "if";
@@ -81,11 +79,8 @@ public enum NodeKind {
             case PLUS_NODE:     return "+";
             case PARAMS_NODE:     return "params";
             case PARAM_NODE:     return "param";
-            // case PROGRAM_NODE:  return "program";
-            // case READ_NODE:     return "read";
             case REPEAT_NODE:   return "repeat";
             case RETURN_NODE:   return "return";
-            // case STAT_NODE:     return "stat";
             case RELAT_OP_NODE:    return "relat_op";
             case TABLE_NODE:    return "table";
             case TABLE_FIELD_NODE:    return "table_field";
@@ -96,7 +91,6 @@ public enum NodeKind {
             case VAR_DECL_NODE: return "var_decl";
             case VAR_LIST_NODE: return "var_list";
             case VAR_USE_NODE:  return "var_use";
-            // case WRITE_NODE:    return "write";
             case WHILE_NODE:    return "while";
 			default:
 				System.err.println("ERROR: Fall through in NodeKind enumeration!");

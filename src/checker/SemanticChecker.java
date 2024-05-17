@@ -10,6 +10,7 @@ import static ast.NodeKind.EXP_LIST_NODE;
 import static ast.NodeKind.FALSE_NODE;
 import static ast.NodeKind.FOR_NODE;
 import static ast.NodeKind.FUNC_DEF_NODE;
+import static ast.NodeKind.FUNC_STAT_NODE;
 import static ast.NodeKind.GE_NODE;
 import static ast.NodeKind.GT_NODE;
 import static ast.NodeKind.IF_NODE;
@@ -160,7 +161,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
             AST temp = visit(child);
 			if (temp != null) node.addChild(temp);
-            // node.addChild(visit(child));
 		});
         if (ctx.laststat() != null) {
             node.addChild(visit(ctx.laststat()));
@@ -171,8 +171,6 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 	@Override
 	public AST visitAssign(AssignContext ctx) {
 		AST node = AST.newSubtree(ASSIGN_NODE);
-        // node.addChild(visit(ctx.varlist()));
-        // node.addChild(visit(ctx.explist()));
         AST varlist = visit(ctx.varlist());
         AST explist = visit(ctx.explist()); 
         int count = varlist.getChild(0).getChildCount();
@@ -323,13 +321,15 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitFunctioncall(FunctioncallContext ctx) {
+		AST func = new AST(FUNC_STAT_NODE, "");
         AST name = visit(ctx.varOrExp());
         if (!idt.lookup(name.data)) {
         	System.out.printf("SEMANTIC ERROR: attempt to call a nil value at line %.0f.\n", name.numData);
             System.exit(1);
         }
         name.addChild(visit(ctx.nameAndArgs().get(0)));
-        return name;
+        func.addChild(name);
+        return func;
     }
 
     @Override
