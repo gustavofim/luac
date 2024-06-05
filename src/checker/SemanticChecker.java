@@ -401,29 +401,29 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         return node;
     }
 
-    @Override
-    public AST visitFunctionDef(FunctionDefContext ctx) {
-        AST node = AST.newSubtree(ASSIGN_NODE);
-        node.addChild(visit(ctx.funcname()));
-        node.addChild(AST.newSubtree(EXP_LIST_NODE, visit(ctx.funcbody())));
-        return node;
-    }
+    // @Override
+    // public AST visitFunctionDef(FunctionDefContext ctx) {
+    //     AST node = AST.newSubtree(ASSIGN_NODE);
+    //     node.addChild(visit(ctx.funcname()));
+    //     node.addChild(AST.newSubtree(EXP_LIST_NODE, visit(ctx.funcbody())));
+    //     return node;
+    // }
 
-    @Override
-    public AST visitFuncname(FuncnameContext ctx) {
-        AST node = AST.newSubtree(VAR_LIST_NODE);
-        AST child = new AST(VAR_DECL_NODE, ctx.NAME().get(0).getSymbol().getText(), (double)ctx.NAME().get(0).getSymbol().getLine());
-        if (!idt.lookup(child.data)) {
-            idt.add(child.data, (int)Math.round(child.numData));
-        }
-        node.addChild(child);
-        if (ctx.NAME().size() > 1) {
-            AST use = new AST(VAR_USE_NODE, ctx.NAME().get(1).getSymbol().getText(), (double)ctx.NAME().get(1).getSymbol().getLine());
-            AST idx = AST.newSubtree(LAST_INDEX_NODE, use);
-            child.addChild(idx);
-        }
-        return node;
-    }
+    // @Override
+    // public AST visitFuncname(FuncnameContext ctx) {
+    //     AST node = AST.newSubtree(VAR_LIST_NODE);
+    //     AST child = new AST(VAR_DECL_NODE, ctx.NAME().get(0).getSymbol().getText(), (double)ctx.NAME().get(0).getSymbol().getLine());
+    //     if (!idt.lookup(child.data)) {
+    //         idt.add(child.data, (int)Math.round(child.numData));
+    //     }
+    //     node.addChild(child);
+    //     if (ctx.NAME().size() > 1) {
+    //         AST use = new AST(VAR_USE_NODE, ctx.NAME().get(1).getSymbol().getText(), (double)ctx.NAME().get(1).getSymbol().getLine());
+    //         AST idx = AST.newSubtree(LAST_INDEX_NODE, use);
+    //         child.addChild(idx);
+    //     }
+    //     return node;
+    // }
 
     @Override
     public AST visitFuncbody(FuncbodyContext ctx) {
