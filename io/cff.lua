@@ -1,5 +1,5 @@
-print("hey")
+a = {}
 
-a = print("hey")
+a[1] = 10
 
-print(print("hey"))
+print(a[1.000000000000000000000000000])

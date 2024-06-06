@@ -11,8 +11,13 @@ public class Runtime {
 
     private final static LuaNil luaNil = LuaNil.getInstance();
 
+    public static LuaType wrapConst(int number) {
+        LuaInt newNum = new LuaInt(number);
+        return newNum;
+    }
+
     public static LuaType wrapConst(double number) {
-        LuaNumber newNum = new LuaNumber(number);
+        LuaDouble newNum = new LuaDouble(number);
         return newNum;
     }
 
@@ -109,17 +114,46 @@ public class Runtime {
         Double aNum = a.toDouble();
         Double bNum = b.toDouble();
 
+        boolean aIsInt = a instanceof LuaInt;
+        boolean bIsInt = b instanceof LuaInt;
+
+        if (a instanceof LuaString) {
+            try {
+                Integer.parseInt(a.toString());
+                aIsInt = true;                
+            } catch (Exception e) {
+            }
+        }
+
+        if (b instanceof LuaString) {
+            try {
+                Integer.parseInt(b.toString());
+                bIsInt = true;                
+            } catch (Exception e) {
+            }
+        }
+
+        boolean ints = aIsInt && bIsInt;
+
         switch (op) {
             case 1:
-                return new LuaNumber(aNum + bNum);
+                if (ints)
+                    return new LuaInt(aNum.intValue() + bNum.intValue());
+                return new LuaDouble(aNum + bNum);
             case 2:
-                return new LuaNumber(aNum - bNum);
+                if (ints)
+                    return new LuaInt(aNum.intValue() - bNum.intValue());
+                return new LuaDouble(aNum - bNum);
             case 3:
-                return new LuaNumber(aNum * bNum);
+                if (ints)
+                    return new LuaInt(aNum.intValue() * bNum.intValue());
+                return new LuaDouble(aNum * bNum);
             case 4:
-                return new LuaNumber(aNum / bNum);
+                return new LuaDouble(aNum / bNum);
             case 5:
-                return new LuaNumber(aNum % bNum);
+                if (ints)
+                    return new LuaInt(aNum.intValue() % bNum.intValue());
+                return new LuaDouble(aNum % bNum);
             default:
                 // Should never be accessed
                 return luaNil;
@@ -128,7 +162,9 @@ public class Runtime {
 
     public static LuaType relatOp(LuaType a, LuaType b, int op) {
         if (a.getClass() != b.getClass()) {
-            return new LuaBoolean(false);
+            if (!(a instanceof LuaNumber && b instanceof LuaNumber)) {
+                return new LuaBoolean(false);
+            }
         }
 
         int cmp;
@@ -160,7 +196,7 @@ public class Runtime {
     public static LuaType unaryOp(LuaType value, int op) {
         switch (op) {
             case 1:
-                return new LuaNumber(-1 * value.toDouble());
+                return new LuaDouble(-1 * value.toDouble());
             case 2:
                 return new LuaBoolean(!value.toBoolean());
             case 3:
@@ -168,7 +204,7 @@ public class Runtime {
                     System.out.printf("RUNTIME ERROR: attempt to get length of non table\n");
                     System.exit(1);
                 }
-                return new LuaNumber(((LuaTable)value).len());
+                return new LuaDouble(((LuaTable)value).len());
             default:
                 // Should never be accessed
                 return luaNil;

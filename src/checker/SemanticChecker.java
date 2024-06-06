@@ -5,6 +5,7 @@ import static ast.NodeKind.ARIT_OP_NODE;
 import static ast.NodeKind.ASSIGN_NODE;
 import static ast.NodeKind.BLOCK_NODE;
 import static ast.NodeKind.BOOL_OP_NODE;
+import static ast.NodeKind.DOUBLE_NODE;
 import static ast.NodeKind.EQ_NODE;
 import static ast.NodeKind.EXP_LIST_NODE;
 import static ast.NodeKind.FALSE_NODE;
@@ -15,6 +16,7 @@ import static ast.NodeKind.GE_NODE;
 import static ast.NodeKind.GT_NODE;
 import static ast.NodeKind.IF_NODE;
 import static ast.NodeKind.INDEX_NODE;
+import static ast.NodeKind.INT_NODE;
 import static ast.NodeKind.LAST_INDEX_NODE;
 import static ast.NodeKind.LE_NODE;
 import static ast.NodeKind.LOCAL_NODE;
@@ -209,7 +211,11 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitNumber(NumberContext ctx) {
-        return new AST(NUM_NODE, Double.parseDouble(ctx.getChild(0).toString()));
+        try {
+            return new AST(INT_NODE, (double)Integer.parseInt(ctx.getChild(0).toString()));
+        } catch (NumberFormatException e) {
+            return new AST(DOUBLE_NODE, Double.parseDouble(ctx.getChild(0).toString()));
+        }
     }
 
     @Override

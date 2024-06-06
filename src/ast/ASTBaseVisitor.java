@@ -29,12 +29,14 @@ public abstract class ASTBaseVisitor<T> {
 	        case ASSIGN_NODE:   return visitAssign(node);
 	        case BOOL_OP_NODE:    return visitBoolOp(node);
 	        case BLOCK_NODE:    return visitBlock(node);
+	        case DOUBLE_NODE:    return visitDouble(node);
 	        case FALSE_NODE:    return visitFalse(node);
 	        case FUNC_DEF_NODE:    return visitFuncDef(node);
 	        case FUNC_STAT_NODE:    return visitFuncStat(node);
 	        case EXP_LIST_NODE:    return visitExpList(node);
 	        case IF_NODE:       return visitIf(node);
 	        case INDEX_NODE:       return visitIndex(node);
+	        case INT_NODE:       return visitInt(node);
 	        case LAST_INDEX_NODE:  return null;//visitLocal(node);
 	        case LOCAL_NODE:  return visitLocal(node);
 	        case NIL_NODE:      return visitNil(node);
@@ -72,6 +74,8 @@ public abstract class ASTBaseVisitor<T> {
 
 	protected abstract T visitBlock(AST node);
 
+	protected abstract T visitDouble(AST node);
+
 	protected abstract T visitFalse(AST node);
 
 	protected abstract T visitFuncDef(AST node);
@@ -83,6 +87,8 @@ public abstract class ASTBaseVisitor<T> {
 	protected abstract T visitIf(AST node);
 
 	protected abstract T visitIndex(AST node);
+
+	protected abstract T visitInt(AST node);
 
 	protected abstract T visitLocal(AST node);
 

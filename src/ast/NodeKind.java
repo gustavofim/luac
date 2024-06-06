@@ -12,6 +12,7 @@ public enum NodeKind {
     ASSIGN_NODE,
     BLOCK_NODE,
     BOOL_OP_NODE,
+    DOUBLE_NODE,
     EQ_NODE,
     EXP_LIST_NODE,
     FALSE_NODE,
@@ -22,6 +23,7 @@ public enum NodeKind {
     GT_NODE,
     IF_NODE,
     INDEX_NODE,
+    INT_NODE,
     LAST_INDEX_NODE,
     LE_NODE,
     LOCAL_NODE,
@@ -56,6 +58,7 @@ public enum NodeKind {
             case ASSIGN_NODE:   return "=";
             case BOOL_OP_NODE:    return "bool_op";
             case BLOCK_NODE:    return "block";
+            case DOUBLE_NODE:    return "";
             case EQ_NODE:       return "==";
             case EXP_LIST_NODE: return "exp_list";
             case FALSE_NODE: return "FALSE";
@@ -66,6 +69,7 @@ public enum NodeKind {
             case GT_NODE:       return ">";
             case IF_NODE:       return "if";
             case INDEX_NODE:       return "index";
+            case INT_NODE:       return "";
             case LAST_INDEX_NODE:       return "last_index";
             case LE_NODE:       return "<=";
             case LOCAL_NODE:       return "local";
@@ -105,8 +109,10 @@ public enum NodeKind {
 	        case UNARY_OP_NODE:
 	        case RELAT_OP_NODE:
 	        case BOOL_OP_NODE:
+	        case DOUBLE_NODE:
 	        case VAL_NODE:
 	        case NUM_NODE:
+	        case INT_NODE:
 	        case VAR_DECL_NODE:
 	        case VAR_USE_NODE:
 	        case PARAM_NODE:

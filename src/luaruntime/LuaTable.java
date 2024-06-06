@@ -20,7 +20,7 @@ public class LuaTable implements LuaType {
     }
 
     public void put(LuaType value) {
-        data.put(new LuaNumber(++idx), value);
+        data.put(new LuaDouble(++idx), value);
     }
 
     public double len() {

@@ -28,8 +28,8 @@ public class LuaString implements LuaType {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof LuaNumber) {
-            LuaNumber oNumber = (LuaNumber)o;
+        if (o instanceof LuaInt) {
+            LuaInt oNumber = (LuaInt)o;
             return this.toDouble() == oNumber.toDouble();
         }
         if (!(o instanceof LuaString)) {

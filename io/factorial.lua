@@ -1,5 +1,5 @@
 -- defines [a] `factorial` 'function'
-    function fact (n)
+    fact = function(n)
       if n == 0 then
         return 1
       else

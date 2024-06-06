@@ -204,6 +204,20 @@ public class Gen extends ASTBaseVisitor<Void> {
     }
 
     @Override
+    protected Void visitDouble(AST node) {
+        emit(String.format("ldc2_w %f", node.numData));
+        emit("invokestatic luaruntime/Runtime/wrapConst(D)Lluaruntime/LuaType;", true);
+        return null;
+    }
+
+    @Override
+    protected Void visitInt(AST node) {
+        emit(String.format("ldc %d", node.numData.intValue()));
+        emit("invokestatic luaruntime/Runtime/wrapConst(I)Lluaruntime/LuaType;", true);
+        return null;
+    }
+
+    @Override
     protected Void visitNil(AST node) {
         emit("invokestatic luaruntime/Runtime/nilConst()Lluaruntime/LuaType;", true);
         return null;
