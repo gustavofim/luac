@@ -154,28 +154,9 @@ public class Gen extends ASTBaseVisitor<Void> {
 
     @Override
     protected Void visitVarUse(AST node) {
-        int count = node.getChildCount();
-        if (count == 0) {
-            // No args -> evaluate var
-            emit(String.format("ldc \"%s\"", node.data));
-            emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
-        } else {
-            if (node.getChild(count - 1).kind == ARGS_NODE) {
-                emit("invokestatic luaruntime/Runtime/startScope()V", true);
-                emit(String.format("ldc \"%s\"", node.data));
-                emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
-                // visit(node.getChild(0));
-                for (int i = 0; i < count; ++i) visit(node.getChild(i));
-                emit("invokestatic luaruntime/Runtime/call(Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
-                emit("invokestatic luaruntime/Runtime/endScope()V", true);
-            } else {
-                emit(String.format("ldc \"%s\"", node.data));
-                emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
-                for (int i = 0; i < node.getChildCount(); i++) {
-                    visit(node.getChild(i));
-                }
-            }
-        }
+        emit(String.format("ldc \"%s\"", node.data));
+        emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
+        for (int i = 0; i < node.getChildCount(); ++i) visit(node.getChild(i));
         return null;
     }
 
@@ -188,12 +169,7 @@ public class Gen extends ASTBaseVisitor<Void> {
 
     @Override
     protected Void visitVarDecl(AST node) {
-        // if (node.getChildCount() == 0) {
-            emit(String.format("ldc \"%s\"", node.data), true);
-        // } else {
-        //     emit(String.format("ldc \"%s\"", node.data), true);
-        //     emit(String.format("ldc \"%s\"", node.data), true);
-        // }
+        emit(String.format("ldc \"%s\"", node.data), true);
         return null;
     }
 
@@ -368,15 +344,17 @@ public class Gen extends ASTBaseVisitor<Void> {
 
     @Override
     protected Void visitArgs(AST node) {
-        if (node.getChildCount() == 0) {
-            return null;
+        emit("invokestatic luaruntime/Runtime/startScope()V", true);
+        if (node.getChildCount() > 0) {
+            AST explist = node.getChild(0);
+            for (int i = 0; i < explist.getChildCount(); i++) {
+                visit(explist.getChild(i));
+                emit(String.format("ldc %d", i));
+                emit("invokestatic luaruntime/Runtime/setArg(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
+            }
         }
-        AST child = node.getChild(0);
-        for (int i = 0; i < child.getChildCount(); i++) {
-            visit(child.getChild(i));
-            emit(String.format("ldc %d", i));
-            emit("invokestatic luaruntime/Runtime/setArg(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
-        }
+        emit("invokestatic luaruntime/Runtime/call(Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
+        emit("invokestatic luaruntime/Runtime/endScope()V", true);
         return null;
     }
 

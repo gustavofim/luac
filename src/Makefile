@@ -45,15 +45,22 @@ run:
 	@dot -Tpdf tree.dot -o tree.pdf
 	@java -jar jasmin.jar out/*.j > /dev/null
 	@java -jar jasmin.jar lualib/*.j > /dev/null
-	@echo "# Output"
 	@java -cp "luaruntime.jar:." Program
-	@echo "\n# Lua Output"
-	@lua $(ROOT)/io/$(FILE).lua
 test:
-	@echo "Running $(FILE):"
-	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/lua-5.4.6-tests/$(FILE)
+	@rm -f out/*
+	@rm -f ./*.class
+	@rm -rf TEMP
+	@echo "Running: $(FILE).lua"
+	@mkdir -p out/
+	@mkdir TEMP/
+	@$(JAVA) $(CLASS_PATH_OPTION):$(BIN_PATH) Main $(ROOT)/io/$(FILE).lua 2> tree.dot > out/$(FILE).j
+	@java -jar jasmin.jar out/*.j > /dev/null
+	@java -jar jasmin.jar lualib/*.j > /dev/null
+	@java -cp "luaruntime.jar:." Program > TEMP/$(FILE)_out
+	@lua $(ROOT)/io/$(FILE).lua > TEMP/$(FILE)_lua_out
+	@diff TEMP/$(FILE)_out TEMP/$(FILE)_lua_out || true
 debug:
-	cd $(BIN_PATH) && $(GRUN) $(GEN_PATH).$(GRAMMAR_NAME) chunk -gui $(ROOT)/io/$(FILE)
+	cd $(BIN_PATH) && $(GRUN) $(GEN_PATH).$(GRAMMAR_NAME) chunk -gui $(ROOT)/io/$(FILE).lua
 # Remove os arquivos gerados pelo ANTLR
 clean:
 	rm -rf $(GEN_PATH) $(BIN_PATH) out/

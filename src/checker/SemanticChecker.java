@@ -518,11 +518,12 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 
     @Override
     public AST visitAttnamelist(AttnamelistContext ctx) {
-        return AST.newSubtree(
-            VAR_LIST_NODE,
-            new AST(VAR_DECL_NODE,
-                        ctx.NAME().get(0).getSymbol().getText(),
-                        (double)ctx.NAME().get(0).getSymbol().getLine()));
+        String name = ctx.NAME().get(0).getSymbol().getText();
+        int line = ctx.NAME().get(0).getSymbol().getLine();
+        if (!idt.lookup(name)) {
+            idt.add(name, line);
+        }
+        return AST.newSubtree(VAR_LIST_NODE, new AST(VAR_DECL_NODE, name, (double)line));
     }
 
     @Override

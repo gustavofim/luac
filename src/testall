@@ -2,7 +2,8 @@
 
 [ ! -d bin ] && make >> /dev/null
 
-for file in `ls ../lua-5.4.6-tests/*.lua`; do
+for file in `ls ../io/*.lua`; do
     base=$(basename $file)
-    make test FILE=$base
+    filename="${base%.*}"
+    make test FILE=$filename
 done

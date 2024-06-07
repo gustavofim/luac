@@ -1,21 +1,9 @@
 a = {}
 
-a.b = {}
-
-a.b.c = {}
-
-a.fun = function()
-    print(0)
+a.b = function()
+    return {66, 77}
 end
 
-a.b.fun = function()
-    return 10
-end
+b = a.b()[1]
 
-a.b.c.fun = function(a)
-    return a
-end
-
-a.fun()
-print(a.b.fun())
-print(a.b.c.fun(20))
+print(b)

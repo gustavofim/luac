@@ -20,9 +20,9 @@ public final class IdentifierTable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Formatter f = new Formatter(sb);
-        f.format("Identifier table:\n");
+        f.format("; Identifier table:\n");
         this.table.forEach((key, value) ->
-            f.format("\t%s", value.toString())
+            f.format("; \t%s", value.toString())
         );
         f.close();
         return sb.toString();
