@@ -164,7 +164,8 @@ public class Gen extends ASTBaseVisitor<Void> {
                 emit("invokestatic luaruntime/Runtime/startScope()V", true);
                 emit(String.format("ldc \"%s\"", node.data));
                 emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
-                visit(node.getChild(0));
+                // visit(node.getChild(0));
+                for (int i = 0; i < count; ++i) visit(node.getChild(i));
                 emit("invokestatic luaruntime/Runtime/call(Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
                 emit("invokestatic luaruntime/Runtime/endScope()V", true);
             } else {
