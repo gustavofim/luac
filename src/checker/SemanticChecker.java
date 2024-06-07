@@ -173,14 +173,24 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
 	@Override
 	public AST visitAssign(AssignContext ctx) {
 		AST node = AST.newSubtree(ASSIGN_NODE);
+
         AST varlist = visit(ctx.varlist());
         AST explist = visit(ctx.explist()); 
-        int count = varlist.getChild(0).getChildCount();
+
+        if (varlist.getChildCount() > 1 || explist.getChildCount() > 1) {
+        	System.out.printf("NOT IMPLEMENTED ERROR: no multiple assignments");
+            System.exit(1);
+        }
+
         node.addChild(varlist);
+        AST var = varlist.getChild(0);
+        int count = var.getChildCount();
+
+
         if (count > 0) {
-            NodeKind kind = varlist.getChild(0).getChild(0).kind;
+            NodeKind kind = var.getChild(0).kind;
             if (kind == INDEX_NODE || kind == LAST_INDEX_NODE) {
-                AST child = varlist.getChild(0).getChild(count-1).getChild(0);
+                AST child = var.getChild(count-1).getChild(0);
                 node.addChild(AST.newSubtree(EXP_LIST_NODE, AST.newSubtree(TABLE_FIELD_NODE, child, explist.getChild(0))));
             }
         } else {
@@ -564,8 +574,10 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     public AST visitVarSuffix(VarSuffixContext ctx) {
         AST node = AST.newSubtree(INDEX_NODE);
         if (ctx.LBRA() != null) {
+            // Table indexed with brackets
             node.addChild(visit(ctx.exp()));
         } else {
+            // Syntax sugar: table.key
             node.addChild(new AST(VAL_NODE, ctx.NAME().getSymbol().getText()));
         }
         return node;

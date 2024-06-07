@@ -1,5 +1,7 @@
 package ast;
 
+import static ast.NodeKind.DOUBLE_NODE;
+import static ast.NodeKind.INT_NODE;
 import static ast.NodeKind.NUM_NODE;
 
 import java.util.ArrayList;
@@ -79,7 +81,7 @@ public class AST {
 	    	System.err.printf("%s", this.kind.toString());
 	    // }
 	    if (NodeKind.hasData(this.kind)) {
-			if (this.kind == NUM_NODE) {
+			if (this.kind == INT_NODE || this.kind == DOUBLE_NODE) {
 				System.err.printf("num: %f", this.numData);
 			} else if (this.kind == NodeKind.VAR_DECL_NODE
 						|| this.kind == NodeKind.VAR_USE_NODE
