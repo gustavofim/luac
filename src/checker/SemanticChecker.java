@@ -278,6 +278,10 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     public AST visitVar(VarContext ctx) {
         AST node = new AST(VAR_USE_NODE, ctx.NAME().getSymbol().getText(), (double)ctx.NAME().getSymbol().getLine());
         ctx.varSuffix().forEach((child) -> {
+            if (!idt.lookup(ctx.NAME().getSymbol().getText())) {
+                System.out.printf("SEMANTIC ERROR: attempt to index a nil value at line %d.\n", ctx.NAME().getSymbol().getLine());
+                System.exit(1);
+            }
             node.addChild(visit(child));
         });
         return node;
