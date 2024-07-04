@@ -1,4 +1,4 @@
-package luaruntime;
+package lua;
 
 public class LuaInt implements LuaNumber {
     private int data;
@@ -39,7 +39,7 @@ public class LuaInt implements LuaNumber {
         if (!(o instanceof LuaNumber)) {
             return false;
         }
-        LuaType oNumber = (LuaType)o;
+        LuaObj oNumber = (LuaObj)o;
         // System.out.println(String.format("I: %f - %f", this.toDouble(), oNumber.toDouble()));
         return this.toDouble().doubleValue() == oNumber.toDouble().doubleValue();
     }

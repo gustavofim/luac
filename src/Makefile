@@ -65,8 +65,8 @@ debug:
 clean:
 	rm -rf $(GEN_PATH) $(BIN_PATH) out/
 	rm luaruntime.jar tree.*
-runtime: luaruntime/*.java
+runtime: lua/*.java
 	@echo "Recompiling lua runtime..."
-	@javac luaruntime/*.java
-	@jar -cf luaruntime.jar luaruntime/*.class
-	@rm luaruntime/*.class
+	@javac lua/*.java
+	@jar -cf luaruntime.jar lua/*.class
+	@rm lua/*.class

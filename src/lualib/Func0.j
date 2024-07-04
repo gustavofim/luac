@@ -1,6 +1,6 @@
 .class public Func0
 .super java/lang/Object
-.implements luaruntime/LuaFunctionLiteral
+.implements lua/LuaFunctionLiteral
 
 .method public <init>()V
 	aload_0
@@ -9,19 +9,19 @@
 	return
 .end method
 
-.method public call()Lluaruntime/LuaType;
+.method public call()Llua/LuaObj;
 	.limit locals 10
 	.limit stack 10
-	invokestatic luaruntime/Runtime/startScope()V
+	invokestatic lua/Runtime/startScope()V
 	
 	ldc "x"
-	invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;
+	invokestatic lua/Runtime/getVar(Ljava/lang/String;)Llua/LuaObj;
 	
-	invokestatic luaruntime/Runtime/print(Lluaruntime/LuaType;)V
+	invokestatic lua/Runtime/print(Llua/LuaObj;)V
 	
-	invokestatic luaruntime/Runtime/endScope()V
+	invokestatic lua/Runtime/endScope()V
 	
-	invokestatic luaruntime/Runtime/nilConst()Lluaruntime/LuaType;
+	invokestatic lua/Runtime/nilConst()Llua/LuaObj;
 	areturn
 .end method
 

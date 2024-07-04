@@ -1,6 +1,6 @@
-package luaruntime;
+package lua;
 
-public class LuaString implements LuaType {
+public class LuaString implements LuaObj {
     private String data;
 
     public LuaString(String data) {
@@ -8,7 +8,11 @@ public class LuaString implements LuaType {
     }
 
     public Double toDouble() {
-        return Double.parseDouble(this.data);
+        try {
+            return Double.parseDouble(this.data);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

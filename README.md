@@ -62,3 +62,12 @@ Strings may be coerced to number for arithmetic operations (not for boolean).
 	return
 .end method
 ```
+
+# TODO
+## Bugs
+- Indexing with table printing table
+- Chaining method calls not working 
+
+## Missing
+- Exponentiation
+- Treatment of types in comparisons is wonky

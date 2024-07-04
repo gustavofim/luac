@@ -1,6 +1,6 @@
-package luaruntime;
+package lua;
 
-public class LuaNil implements LuaType {
+public class LuaNil implements LuaObj {
     private static LuaNil instance = null;
 
     private LuaNil() {}

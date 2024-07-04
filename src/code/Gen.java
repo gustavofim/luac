@@ -27,7 +27,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         emit(".limit locals 10");
         emit(".limit stack 10", true);
 
-        emit("invokestatic luaruntime/Runtime/startScope()V", true);
+        emit("invokestatic lua/Runtime/startScope()V", true);
 
         // print and read functions where defined in lualib (Func0 and Func1)
         emit("; Hardcoded lualib functions ====================================================", true);
@@ -36,23 +36,23 @@ public class Gen extends ASTBaseVisitor<Void> {
         emit("new Func0");
         emit("dup");
         emit("invokespecial Func0/<init>()V");
-        emit("invokestatic luaruntime/Runtime/wrapConst(ILluaruntime/LuaFunctionLiteral;)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/wrapConst(ILlua/LuaFunctionLiteral;)Llua/LuaObj;", true);
         emit("ldc \"x\"");
-        emit("invokestatic luaruntime/Runtime/setParam(Lluaruntime/LuaType;Ljava/lang/String;)Lluaruntime/LuaType;", true);
-        emit("invokestatic luaruntime/Runtime/setGlobalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+        emit("invokestatic lua/Runtime/setParam(Llua/LuaObj;Ljava/lang/String;)Llua/LuaObj;", true);
+        emit("invokestatic lua/Runtime/setGlobalVar(Ljava/lang/String;Llua/LuaObj;)V", true);
 
         emit("ldc \"read\"");
         emit("ldc 1");
         emit("new Func1");
         emit("dup");
         emit("invokespecial Func1/<init>()V");
-        emit("invokestatic luaruntime/Runtime/wrapConst(ILluaruntime/LuaFunctionLiteral;)Lluaruntime/LuaType;", true);
-        emit("invokestatic luaruntime/Runtime/setGlobalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+        emit("invokestatic lua/Runtime/wrapConst(ILlua/LuaFunctionLiteral;)Llua/LuaObj;", true);
+        emit("invokestatic lua/Runtime/setGlobalVar(Ljava/lang/String;Llua/LuaObj;)V", true);
 
         emit("; ===============================================================================", true);
 
         visit(root);
-        emit("invokestatic luaruntime/Runtime/endScope()V", true);
+        emit("invokestatic lua/Runtime/endScope()V", true);
         emit("return");
         ident--;
         emit(".end method");
@@ -67,13 +67,13 @@ public class Gen extends ASTBaseVisitor<Void> {
                 PrintWriter printWriter = new PrintWriter(fileWriter);
                 printWriter.println(String.format(".class public %s", key));
                 printWriter.println(".super java/lang/Object");
-                printWriter.println(".implements luaruntime/LuaFunctionLiteral\n");
+                printWriter.println(".implements lua/LuaFunctionLiteral\n");
                 printWriter.println(".method public <init>()V");
                 printWriter.println("\taload_0\n");
                 printWriter.println("\tinvokenonvirtual java/lang/Object/<init>()V");
                 printWriter.println("\treturn");
                 printWriter.println(".end method\n");
-                printWriter.println(".method public call()Lluaruntime/LuaType;");
+                printWriter.println(".method public call()Llua/LuaObj;");
                 printWriter.println("\t.limit locals 10");
                 printWriter.println("\t.limit stack 10");
                 value.forEach(line -> printWriter.printf(line));
@@ -110,11 +110,11 @@ public class Gen extends ASTBaseVisitor<Void> {
 
     @Override
     protected Void visitBlock(AST node) {
-        emit("invokestatic luaruntime/Runtime/startScope()V", true);
+        emit("invokestatic lua/Runtime/startScope()V", true);
         for (int i = 0; i < node.getChildCount(); i++) {
             visit(node.getChild(i));
         }
-        emit("invokestatic luaruntime/Runtime/endScope()V", true);
+        emit("invokestatic lua/Runtime/endScope()V", true);
         return null;
     }
 
@@ -143,9 +143,9 @@ public class Gen extends ASTBaseVisitor<Void> {
         visit(node.getChild(1).getChild(0));
         if (node.getChild(0).getChild(0).getChildCount() == 0) {
             if (isLocal) {
-                emit("invokestatic luaruntime/Runtime/setLocalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+                emit("invokestatic lua/Runtime/setLocalVar(Ljava/lang/String;Llua/LuaObj;)V", true);
             } else {
-                emit("invokestatic luaruntime/Runtime/setGlobalVar(Ljava/lang/String;Lluaruntime/LuaType;)V", true);
+                emit("invokestatic lua/Runtime/setGlobalVar(Ljava/lang/String;Llua/LuaObj;)V", true);
             }
         }
         isAssign = false;
@@ -155,7 +155,7 @@ public class Gen extends ASTBaseVisitor<Void> {
     @Override
     protected Void visitVarUse(AST node) {
         emit(String.format("ldc \"%s\"", node.data));
-        emit("invokestatic luaruntime/Runtime/getVar(Ljava/lang/String;)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/getVar(Ljava/lang/String;)Llua/LuaObj;", true);
         for (int i = 0; i < node.getChildCount(); ++i) visit(node.getChild(i));
         return null;
     }
@@ -163,7 +163,7 @@ public class Gen extends ASTBaseVisitor<Void> {
     @Override
     protected Void visitIndex(AST node) {
         visit(node.getChild(0));
-        emit("invokestatic luaruntime/Runtime/getFromTable(Lluaruntime/LuaType;Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/getFromTable(Llua/LuaObj;Llua/LuaObj;)Llua/LuaObj;", true);
         return null;
     }
 
@@ -176,46 +176,46 @@ public class Gen extends ASTBaseVisitor<Void> {
     @Override
     protected Void visitNum(AST node) {
         emit(String.format("ldc2_w %f", node.numData));
-        emit("invokestatic luaruntime/Runtime/wrapConst(D)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/wrapConst(D)Llua/LuaObj;", true);
         return null;
     }
 
     @Override
     protected Void visitDouble(AST node) {
         emit(String.format("ldc2_w %f", node.numData));
-        emit("invokestatic luaruntime/Runtime/wrapConst(D)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/wrapConst(D)Llua/LuaObj;", true);
         return null;
     }
 
     @Override
     protected Void visitInt(AST node) {
         emit(String.format("ldc %d", node.numData.intValue()));
-        emit("invokestatic luaruntime/Runtime/wrapConst(I)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/wrapConst(I)Llua/LuaObj;", true);
         return null;
     }
 
     @Override
     protected Void visitNil(AST node) {
-        emit("invokestatic luaruntime/Runtime/nilConst()Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/nilConst()Llua/LuaObj;", true);
         return null;
     }
 
     @Override
     protected Void visitTrue(AST node) {
-        emit("invokestatic luaruntime/Runtime/trueConst()Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/trueConst()Llua/LuaObj;", true);
         return null;
     }
 
     @Override
     protected Void visitFalse(AST node) {
-        emit("invokestatic luaruntime/Runtime/falseConst()Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/falseConst()Llua/LuaObj;", true);
         return null;
     }
 
     @Override
     protected Void visitVal(AST node) {
         emit(String.format("ldc \"%s\"", node.data));
-        emit("invokestatic luaruntime/Runtime/wrapConst(Ljava/lang/String;)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/wrapConst(Ljava/lang/String;)Llua/LuaObj;", true);
         return null;
     }
 
@@ -224,7 +224,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         visit(node.getChild(0));
         visit(node.getChild(1));
         emit(String.format("ldc %.0f", node.numData));
-        emit("invokestatic luaruntime/Runtime/aritOp(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/aritOp(Llua/LuaObj;Llua/LuaObj;I)Llua/LuaObj;", true);
         return null;
     }
 
@@ -233,7 +233,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         visit(node.getChild(0));
         visit(node.getChild(1));
         emit(String.format("ldc %.0f", node.numData));
-        emit("invokestatic luaruntime/Runtime/relatOp(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/relatOp(Llua/LuaObj;Llua/LuaObj;I)Llua/LuaObj;", true);
         return null;
     }
 
@@ -242,7 +242,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         visit(node.getChild(0));
         visit(node.getChild(1));
         emit(String.format("ldc %.0f", node.numData));
-        emit("invokestatic luaruntime/Runtime/boolOp(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/boolOp(Llua/LuaObj;Llua/LuaObj;I)Llua/LuaObj;", true);
         return null;
     }
 
@@ -253,7 +253,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         emit(String.format("while%d:", whileCount));
         ident++;
         visit(node.getChild(0));
-        emit("invokeinterface luaruntime/LuaType/toBoolean()Z 1\n");
+        emit("invokeinterface lua/LuaObj/toBoolean()Z 1\n");
         ident--;
         emit(String.format("ifeq whileEnd%d", whileCount));
         ident++;
@@ -273,7 +273,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         ident++;
         visit(node.getChild(0));
         visit(node.getChild(1));
-        emit("invokeinterface luaruntime/LuaType/toBoolean()Z 1");
+        emit("invokeinterface lua/LuaObj/toBoolean()Z 1");
         emit(String.format("ifeq repeat%d", repeatCount), true);
         ident--;
 
@@ -288,7 +288,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         int count = ifCount;
         ifCount++;
         visit(node.getChild(0));
-        emit("invokeinterface luaruntime/LuaType/toBoolean()Z 1");
+        emit("invokeinterface lua/LuaObj/toBoolean()Z 1");
         emit(String.format("ifeq if%d", count));
         ident++;
         visit(node.getChild(1));
@@ -308,7 +308,7 @@ public class Gen extends ASTBaseVisitor<Void> {
     protected Void visitUnaryOp(AST node) {
         visit(node.getChild(0));
         emit(String.format("ldc %.0f", node.numData));
-        emit("invokestatic luaruntime/Runtime/unaryOp(Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/unaryOp(Llua/LuaObj;I)Llua/LuaObj;", true);
         return null;
     }
 
@@ -316,7 +316,7 @@ public class Gen extends ASTBaseVisitor<Void> {
     @Override
     protected Void visitTable(AST node) {
         inTable = true;
-        emit("invokestatic luaruntime/Runtime/tableConst()Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/tableConst()Llua/LuaObj;", true);
         for (int i = 0; i < node.getChildCount(); i++) {
             visit(node.getChild(i));
         }
@@ -332,29 +332,29 @@ public class Gen extends ASTBaseVisitor<Void> {
         visit(node.getChild(0));
         if (node.getChildCount() == 2) {
             visit(node.getChild(1));
-            emit("invokestatic luaruntime/Runtime/constructTable(Lluaruntime/LuaType;Lluaruntime/LuaType;Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
+            emit("invokestatic lua/Runtime/constructTable(Llua/LuaObj;Llua/LuaObj;Llua/LuaObj;)Llua/LuaObj;", true);
             if (!inTable) {
                 emit("pop");
             }
         } else {
-            emit("invokestatic luaruntime/Runtime/constructTable(Lluaruntime/LuaType;Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
+            emit("invokestatic lua/Runtime/constructTable(Llua/LuaObj;Llua/LuaObj;)Llua/LuaObj;", true);
         }
         return null;
     }
 
     @Override
     protected Void visitArgs(AST node) {
-        emit("invokestatic luaruntime/Runtime/startScope()V", true);
+        emit("invokestatic lua/Runtime/startScope()V", true);
         if (node.getChildCount() > 0) {
             AST explist = node.getChild(0);
             for (int i = 0; i < explist.getChildCount(); i++) {
                 visit(explist.getChild(i));
                 emit(String.format("ldc %d", i));
-                emit("invokestatic luaruntime/Runtime/setArg(Lluaruntime/LuaType;Lluaruntime/LuaType;I)Lluaruntime/LuaType;", true);
+                emit("invokestatic lua/Runtime/setArg(Llua/LuaObj;Llua/LuaObj;I)Llua/LuaObj;", true);
             }
         }
-        emit("invokestatic luaruntime/Runtime/call(Lluaruntime/LuaType;)Lluaruntime/LuaType;", true);
-        emit("invokestatic luaruntime/Runtime/endScope()V", true);
+        emit("invokestatic lua/Runtime/call(Llua/LuaObj;)Llua/LuaObj;", true);
+        emit("invokestatic lua/Runtime/endScope()V", true);
         return null;
     }
 
@@ -362,7 +362,7 @@ public class Gen extends ASTBaseVisitor<Void> {
     protected Void visitParams(AST node) {
         for (int i = 0; i < node.getChildCount(); i++) {
             visit(node.getChild(i));
-            emit("invokestatic luaruntime/Runtime/setParam(Lluaruntime/LuaType;Ljava/lang/String;)Lluaruntime/LuaType;", true);
+            emit("invokestatic lua/Runtime/setParam(Llua/LuaObj;Ljava/lang/String;)Llua/LuaObj;", true);
         }
         return null;
     }
@@ -388,7 +388,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         isMain = false;
         visit(node.getChild(blockIdx));
         if (!returned) {
-            emit("invokestatic luaruntime/Runtime/nilConst()Lluaruntime/LuaType;");
+            emit("invokestatic lua/Runtime/nilConst()Llua/LuaObj;");
             emit("areturn");
         }
         returned = false;
@@ -398,7 +398,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         emit(String.format("new Func%d", funcCount));
         emit("dup");
         emit(String.format("invokespecial Func%d/<init>()V", funcCount));
-        emit("invokestatic luaruntime/Runtime/wrapConst(ILluaruntime/LuaFunctionLiteral;)Lluaruntime/LuaType;", true);
+        emit("invokestatic lua/Runtime/wrapConst(ILlua/LuaFunctionLiteral;)Llua/LuaObj;", true);
 
         if (node.getChildCount() > 1) {
             visit(node.getChild(0));
@@ -416,7 +416,7 @@ public class Gen extends ASTBaseVisitor<Void> {
         if (node.getChildCount() > 0) {
             visit(node.getChild(0));
         } else {
-            emit("invokestatic luaruntime/Runtime/nilConst()Lluaruntime/LuaType;", true);
+            emit("invokestatic lua/Runtime/nilConst()Llua/LuaObj;", true);
         }
         emit("areturn");
         return null;

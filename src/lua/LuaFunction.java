@@ -1,8 +1,8 @@
-package luaruntime;
+package lua;
 
 import java.util.ArrayList;
 
-public class LuaFunction implements LuaType {
+public class LuaFunction implements LuaObj {
     private int id;
     private LuaFunctionLiteral func;
     private int numPar = 0;
@@ -19,7 +19,7 @@ public class LuaFunction implements LuaType {
         params.add(param);
     }
 
-    public void setArg(int n, LuaType arg) {
+    public void setArg(int n, LuaObj arg) {
         if (params.isEmpty() || params.size() < n + 1) {
             return;
         }
@@ -34,7 +34,7 @@ public class LuaFunction implements LuaType {
         }
     }
 
-    public LuaType call() {
+    public LuaObj call() {
         setNilArgs();
         numArgs = 0;
         return func.call();

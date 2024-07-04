@@ -1,6 +1,6 @@
-package luaruntime;
+package lua;
 
-public class LuaBoolean implements LuaType {
+public class LuaBoolean implements LuaObj {
     private boolean data;
     public LuaBoolean(boolean data) {
         this.data = data;

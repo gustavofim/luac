@@ -1,6 +1,6 @@
-package luaruntime;
+package lua;
 
-public interface LuaType {
+public interface LuaObj {
     boolean toBoolean();
     Double toDouble(); 
     String toString();

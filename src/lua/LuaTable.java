@@ -1,25 +1,25 @@
-package luaruntime;
+package lua;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class LuaTable implements LuaType {
+public class LuaTable implements LuaObj {
     private static final AtomicLong nextId = new AtomicLong(0);
     private final long id = nextId.getAndIncrement();
 
-    private HashMap<LuaType, LuaType> data = new HashMap<LuaType, LuaType>();
+    private HashMap<LuaObj, LuaObj> data = new HashMap<LuaObj, LuaObj>();
 
     private double idx = 0.0;
 
-    public LuaType get(LuaType key) {
+    public LuaObj get(LuaObj key) {
         return data.getOrDefault(key, LuaNil.getInstance());
     }
 
-    public void put(LuaType key, LuaType value) {
+    public void put(LuaObj key, LuaObj value) {
         data.put(key, value);
     }
 
-    public void put(LuaType value) {
+    public void put(LuaObj value) {
         data.put(new LuaDouble(++idx), value);
     }
 
