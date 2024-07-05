@@ -462,6 +462,9 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
         AST node = AST.newSubtree(PARAMS_NODE);
 		ctx.NAME().forEach((child) -> {
 			node.addChild(new AST(PARAM_NODE, child.getSymbol().getText(), (double)child.getSymbol().getLine()));
+            if (!idt.lookup(child.getSymbol().getText())) {
+                idt.add(child.getSymbol().getText(), (int)Math.round(child.getSymbol().getLine()));
+            }
 		});
         return node;
     }
