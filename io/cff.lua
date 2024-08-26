@@ -1,9 +1,14 @@
--- Erro semântico não detectado em tempo de compilação:
+-- Indexação de tabelas
+t = {}
+a = {}
 
-addOne = function(a)
-    return a + 1
-end
+t[a] = 10
 
-addOne = 10
+print(t[{}])
+print(t[a])
 
-print(addOne(10))
+t[1] = 20
+
+print(t[1.00])
+print(t["1"])
+

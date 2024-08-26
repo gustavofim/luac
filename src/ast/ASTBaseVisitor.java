@@ -40,8 +40,7 @@ public abstract class ASTBaseVisitor<T> {
 	        case LAST_INDEX_NODE:  return null;//visitLocal(node);
 	        case LOCAL_NODE:  return visitLocal(node);
 	        case NIL_NODE:      return visitNil(node);
-	        case NUM_NODE:      return visitNum(node);
-	        case PARAMS_NODE:  return visitParams(node);
+	        case PARAM_LIST_NODE:  return visitParamList(node);
 	        case PARAM_NODE:  return visitParam(node);
 	        case REPEAT_NODE:   return visitRepeat(node);
 	        case RETURN_NODE:   return visitReturn(node);
@@ -50,7 +49,7 @@ public abstract class ASTBaseVisitor<T> {
 	        case TABLE_FIELD_NODE:    return visitTableField(node);
 	        case TRUE_NODE:    return visitTrue(node);
 	        case UNARY_OP_NODE:    return visitUnaryOp(node);
-	        case VAL_NODE: return visitVal(node);
+	        case STR_NODE: return visitVal(node);
 	        case VAR_DECL_NODE: return visitVarDecl(node);
 	        case VAR_USE_NODE:  return visitVarUse(node);
 	        case WHILE_NODE:    return visitWhile(node);
@@ -94,9 +93,7 @@ public abstract class ASTBaseVisitor<T> {
 
 	protected abstract T visitNil(AST node);
 	
-	protected abstract T visitNum(AST node);
-
-	protected abstract T visitParams(AST node);
+	protected abstract T visitParamList(AST node);
 
 	protected abstract T visitParam(AST node);
 

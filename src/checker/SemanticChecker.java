@@ -6,39 +6,26 @@ import static ast.NodeKind.ASSIGN_NODE;
 import static ast.NodeKind.BLOCK_NODE;
 import static ast.NodeKind.BOOL_OP_NODE;
 import static ast.NodeKind.DOUBLE_NODE;
-import static ast.NodeKind.EQ_NODE;
 import static ast.NodeKind.EXP_LIST_NODE;
 import static ast.NodeKind.FALSE_NODE;
-import static ast.NodeKind.FOR_NODE;
 import static ast.NodeKind.FUNC_DEF_NODE;
 import static ast.NodeKind.FUNC_STAT_NODE;
-import static ast.NodeKind.GE_NODE;
-import static ast.NodeKind.GT_NODE;
 import static ast.NodeKind.IF_NODE;
 import static ast.NodeKind.INDEX_NODE;
 import static ast.NodeKind.INT_NODE;
 import static ast.NodeKind.LAST_INDEX_NODE;
-import static ast.NodeKind.LE_NODE;
 import static ast.NodeKind.LOCAL_NODE;
-import static ast.NodeKind.LT_NODE;
-import static ast.NodeKind.MINUS_NODE;
-import static ast.NodeKind.MOD_NODE;
-import static ast.NodeKind.NEQ_NODE;
 import static ast.NodeKind.NIL_NODE;
-import static ast.NodeKind.NUM_NODE;
-import static ast.NodeKind.OVER_NODE;
-import static ast.NodeKind.PLUS_NODE;
-import static ast.NodeKind.PARAMS_NODE;
+import static ast.NodeKind.PARAM_LIST_NODE;
 import static ast.NodeKind.PARAM_NODE;
 import static ast.NodeKind.RELAT_OP_NODE;
 import static ast.NodeKind.REPEAT_NODE;
 import static ast.NodeKind.RETURN_NODE;
 import static ast.NodeKind.TABLE_FIELD_NODE;
 import static ast.NodeKind.TABLE_NODE;
-import static ast.NodeKind.TIMES_NODE;
 import static ast.NodeKind.TRUE_NODE;
 import static ast.NodeKind.UNARY_OP_NODE;
-import static ast.NodeKind.VAL_NODE;
+import static ast.NodeKind.STR_NODE;
 import static ast.NodeKind.VAR_DECL_NODE;
 import static ast.NodeKind.VAR_LIST_NODE;
 import static ast.NodeKind.VAR_USE_NODE;
@@ -58,11 +45,7 @@ import parser.LuaParser.ComparisonContext;
 import parser.LuaParser.ExplistContext;
 import parser.LuaParser.FalseContext;
 import parser.LuaParser.FieldlistContext;
-import parser.LuaParser.ForContext;
 import parser.LuaParser.FuncbodyContext;
-import parser.LuaParser.FuncnameContext;
-import parser.LuaParser.FunctionDefContext;
-import parser.LuaParser.FunctionDefExpContext;
 import parser.LuaParser.FunctioncallContext;
 import parser.LuaParser.IfThenElseContext;
 import parser.LuaParser.LaststatContext;
@@ -72,9 +55,7 @@ import parser.LuaParser.NameAndArgsContext;
 import parser.LuaParser.NamelistContext;
 import parser.LuaParser.NilContext;
 import parser.LuaParser.NumberContext;
-import parser.LuaParser.OperatorUnaryContext;
 import parser.LuaParser.OrContext;
-import parser.LuaParser.PrefixContext;
 import parser.LuaParser.PrefixexpContext;
 import parser.LuaParser.RepeatContext;
 import parser.LuaParser.StringContext;
@@ -247,7 +228,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     public AST visitString(StringContext ctx) {
         String str = ctx.getChild(0).toString();
         str = str.substring(1, str.length()-1);
-        return new AST(VAL_NODE, str);
+        return new AST(STR_NODE, str);
     }
 
     @Override
@@ -459,7 +440,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     @Override
     public AST visitNamelist(NamelistContext ctx) {
         // Considering theres no FORs, implemented for parameters only
-        AST node = AST.newSubtree(PARAMS_NODE);
+        AST node = AST.newSubtree(PARAM_LIST_NODE);
 		ctx.NAME().forEach((child) -> {
 			node.addChild(new AST(PARAM_NODE, child.getSymbol().getText(), (double)child.getSymbol().getLine()));
             if (!idt.lookup(child.getSymbol().getText())) {
@@ -573,7 +554,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
     @Override
     public AST visitTableAssign(TableAssignContext ctx) {
         AST node = AST.newSubtree(TABLE_FIELD_NODE);
-        node.addChild(new AST(VAL_NODE, ctx.NAME().getSymbol().getText()));
+        node.addChild(new AST(STR_NODE, ctx.NAME().getSymbol().getText()));
         node.addChild(visit(ctx.exp()));
         return node;
     }
@@ -586,7 +567,7 @@ public class SemanticChecker extends LuaParserBaseVisitor<AST> {
             node.addChild(visit(ctx.exp()));
         } else {
             // Syntax sugar: table.key
-            node.addChild(new AST(VAL_NODE, ctx.NAME().getSymbol().getText()));
+            node.addChild(new AST(STR_NODE, ctx.NAME().getSymbol().getText()));
         }
         return node;
     }

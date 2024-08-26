@@ -1,7 +1,5 @@
 package code;
 
-import static ast.NodeKind.ARGS_NODE;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -170,13 +168,6 @@ public class Gen extends ASTBaseVisitor<Void> {
     @Override
     protected Void visitVarDecl(AST node) {
         emit(String.format("ldc \"%s\"", node.data), true);
-        return null;
-    }
-
-    @Override
-    protected Void visitNum(AST node) {
-        emit(String.format("ldc2_w %f", node.numData));
-        emit("invokestatic lua/Runtime/wrapConst(D)Llua/LuaObj;", true);
         return null;
     }
 
@@ -359,7 +350,7 @@ public class Gen extends ASTBaseVisitor<Void> {
     }
 
     @Override
-    protected Void visitParams(AST node) {
+    protected Void visitParamList(AST node) {
         for (int i = 0; i < node.getChildCount(); i++) {
             visit(node.getChild(i));
             emit("invokestatic lua/Runtime/setParam(Llua/LuaObj;Ljava/lang/String;)Llua/LuaObj;", true);
@@ -387,10 +378,10 @@ public class Gen extends ASTBaseVisitor<Void> {
         // Dump the literal here....
         isMain = false;
         visit(node.getChild(blockIdx));
-        if (!returned) {
+        // if (!returned) {
             emit("invokestatic lua/Runtime/nilConst()Llua/LuaObj;");
             emit("areturn");
-        }
+        // }
         returned = false;
         isMain = true;
 

@@ -96,9 +96,9 @@ public class Runtime {
         return vars.peek().getOrDefault(id, luaNil);
     }
 
-    public static LuaObj getLocalVar(String id) {
-        return vars.peek().getOrDefault(id, luaNil);
-    }
+    // public static LuaObj getLocalVar(String id) {
+    //     return vars.peek().getOrDefault(id, luaNil);
+    // }
 
     public static LuaObj aritOp(LuaObj a, LuaObj b, int op) {
         if (a instanceof LuaNil) {
