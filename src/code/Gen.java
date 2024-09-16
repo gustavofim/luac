@@ -340,8 +340,8 @@ public class Gen extends ASTBaseVisitor<Void> {
             AST explist = node.getChild(0);
             for (int i = 0; i < explist.getChildCount(); i++) {
                 visit(explist.getChild(i));
-                emit(String.format("ldc %d", i));
-                emit("invokestatic lua/Runtime/setArg(Llua/LuaObj;Llua/LuaObj;I)Llua/LuaObj;", true);
+                // emit(String.format("ldc %d", i));
+                emit("invokestatic lua/Runtime/setArg(Llua/LuaObj;Llua/LuaObj;)Llua/LuaObj;", true);
             }
         }
         emit("invokestatic lua/Runtime/call(Llua/LuaObj;)Llua/LuaObj;", true);

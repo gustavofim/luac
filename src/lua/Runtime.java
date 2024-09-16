@@ -246,8 +246,8 @@ public class Runtime {
         return func;
     }
 
-    public static LuaObj setArg(LuaObj func, LuaObj arg, int id) {
-        ((LuaFunction)func).setArg(id, arg);
+    public static LuaObj setArg(LuaObj func, LuaObj arg) {
+        ((LuaFunction)func).setArg(arg);
         return func;
     }
 

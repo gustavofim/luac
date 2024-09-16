@@ -19,11 +19,11 @@ public class LuaFunction implements LuaObj {
         params.add(param);
     }
 
-    public void setArg(int n, LuaObj arg) {
-        if (params.isEmpty() || params.size() < n + 1) {
+    public void setArg(LuaObj arg) {
+        if (params.isEmpty() || params.size() < numArgs + 1) {
             return;
         }
-        String argName = params.get(n);
+        String argName = params.get(numArgs);
         Runtime.setLocalVar(argName, arg);
         ++numArgs;
     }
